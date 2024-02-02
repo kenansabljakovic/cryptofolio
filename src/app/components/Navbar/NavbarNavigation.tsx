@@ -1,5 +1,3 @@
-export default function NavbarNavigation(){
-    return (
-        <h2>NavbarNavigation</h2>
-    )
+export default function NavbarNavigation() {
+  return <h2>NavbarNavigation</h2>;
 }

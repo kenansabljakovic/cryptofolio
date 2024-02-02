@@ -36,30 +36,37 @@ export default async function NavbarInfo() {
   const btcMarketCapPercentage: number = Math.floor(market_cap_percentage.btc);
   const ethMarketCapPercentage: number = Math.floor(market_cap_percentage.eth);
   return (
-    <div className="flex">
-      <div className="flex items-center">
-        <span>
-          <CoinsIcon />
+    <div className="flex gap-4 justify-center">
+      <div className="flex items-center gap-1">
+        <CoinsIcon />
+        <span className="text-[#D1D1D1] text-xs font-medium">Coins</span>
+        <span className="text-xs text-white font-medium">
+          {active_cryptocurrencies}
         </span>
-        <span>{`Coins: ${active_cryptocurrencies}`}</span>
       </div>
-      <div className="flex items-center">
-        {" "}
-        <span>
-          <ExchangeIcon />
+      <div className="flex items-center gap-1">
+        <ExchangeIcon />
+        <span className="text-[#D1D1D1] text-xs font-medium">Exchange</span>
+        <span className="text-xs text-white font-medium">{markets}</span>
+      </div>
+      <div className="flex items-center gap-1">
+        <CaretIcon />
+        <span className="text-xs text-white font-medium">
+          {formatNumber(total_market_cap.usd)}
         </span>
-        <span>{`Markets: ${markets}`}</span>
       </div>
-      <div className="flex items-center">
-        <span>
-          <CaretIcon />{" "}
+      <div className="flex items-center gap-1">
+        <span className="text-xs text-white font-medium">$</span>
+        <span className="text-xs text-white font-medium">
+          {formatNumber(total_volume.usd)}
         </span>
-        <span>{`${formatNumber(total_market_cap.usd)}`}</span>
       </div>
-
-      <span>{`Sum of Total Volume: ${formatNumber(total_volume.usd)}`}</span>
-      <span>{`BTC Market Cap Percentage: ${btcMarketCapPercentage}%`}</span>
-      <span>{`ETH Market Cap Percentage: ${ethMarketCapPercentage}%`}</span>
+      <div className="flex items-center gap-1">
+        <span className="text-xs text-white font-medium">{`${btcMarketCapPercentage}%`}</span>
+      </div>
+      <div className="flex items-center gap-1">
+        <span className="text-xs text-white font-medium">{`${ethMarketCapPercentage}%`}</span>
+      </div>
     </div>
   );
 }

@@ -22,7 +22,7 @@ function formatNumber(number: number) {
     formattedNumber = number / 1e15;
   } // Add more else if blocks for larger units if necessary
 
-  return formattedNumber.toFixed(2) + unit;
+  return formattedNumber.toFixed(2) + " " + unit;
 }
 
 export default formatNumber;
