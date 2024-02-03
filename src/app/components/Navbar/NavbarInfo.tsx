@@ -2,11 +2,11 @@
 import { CoinsIcon } from "../../icons/CoinsIcon";
 import { ExchangeIcon } from "../../icons/ExchangeIcon";
 import { CaretIcon } from "../../icons/CaretIcon";
+import { BitcoinIcon } from "../../icons/BitcoinIcon";
+import { EthereumIcon } from "../../icons/EthereumIcon";
 import formatNumber from "@/app/utils/formatNumber";
-
-const getPercentage = (value: number, total: number): number => {
-  return Math.floor((value / total) * 100);
-};
+import getPercentage from "@/app/utils/getPercentage";
+import MarketPercentageBar from "./MarketPercentageBar";
 
 async function getMarketData() {
   const res = await fetch("https://api.coingecko.com/api/v3/global", {
@@ -33,6 +33,10 @@ export default async function NavbarInfo() {
   //console.log("sum: ",sumOfTotalMarketCap)
   const totalMarketCapUSD = total_market_cap.usd;
   const formattedMarketCap = (totalMarketCapUSD / 1e12).toFixed(2);
+  const percentageVolumeBasedOnTotalMarketCap = getPercentage(
+    total_volume.btc,
+    total_market_cap.btc
+  );
   const btcMarketCapPercentage: number = Math.floor(market_cap_percentage.btc);
   const ethMarketCapPercentage: number = Math.floor(market_cap_percentage.eth);
   return (
@@ -57,15 +61,29 @@ export default async function NavbarInfo() {
       </div>
       <div className="flex items-center gap-1">
         <span className="text-xs text-white font-medium">$</span>
-        <span className="text-xs text-white font-medium">
+        <span className="w-full text-xs text-white font-medium">
           {formatNumber(total_volume.usd)}
         </span>
+        <MarketPercentageBar
+          fill="bg-white"
+          percentage={percentageVolumeBasedOnTotalMarketCap}
+        />
       </div>
       <div className="flex items-center gap-1">
+        <BitcoinIcon />
         <span className="text-xs text-white font-medium">{`${btcMarketCapPercentage}%`}</span>
+        <MarketPercentageBar
+          fill="bg-[#F7931A]"
+          percentage={btcMarketCapPercentage}
+        />
       </div>
       <div className="flex items-center gap-1">
+        <EthereumIcon />
         <span className="text-xs text-white font-medium">{`${ethMarketCapPercentage}%`}</span>
+        <MarketPercentageBar
+          fill="bg-[#849DFF]"
+          percentage={ethMarketCapPercentage}
+        />
       </div>
     </div>
   );
