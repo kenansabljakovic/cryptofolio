@@ -28,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="spaceGrotesk.className">
+      <body className={`${spaceGrotesk.className}`}>
         <MarketDataHeader />
         <Navbar />
         {children}
