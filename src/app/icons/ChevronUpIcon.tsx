@@ -1,4 +1,4 @@
-export const CaretIcon = () => {
+export const ChevronUpIcon = () => {
   return (
     <svg width="8" height="4" viewBox="0 0 8 4" fill="none">
       <path
