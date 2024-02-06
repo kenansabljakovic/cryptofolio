@@ -2,7 +2,7 @@ import { Inter } from "next/font/google";
 import { CryptofolioLogoIcon } from "../icons/CryptofolioLogoIcon";
 import { HomeIcon } from "../icons/HomeIcon";
 import { PortfolioGreyIcon } from "../icons/PortfolioGreyIcon";
-
+import { Input } from "@/components/ui/input";
 const inter = Inter({
   subsets: ["latin"],
   weight: ["500", "700"],
@@ -28,7 +28,9 @@ export default function Navbar() {
           </span>
         </div>
       </div>
-      <div></div>
+      <div>
+        <Input placeholder="Search" />
+      </div>
     </div>
   );
 }
