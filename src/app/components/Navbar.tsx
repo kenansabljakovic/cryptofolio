@@ -3,6 +3,14 @@ import { CryptofolioLogoIcon } from "../icons/CryptofolioLogoIcon";
 import { HomeIcon } from "../icons/HomeIcon";
 import { PortfolioGreyIcon } from "../icons/PortfolioGreyIcon";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["500", "700"],
@@ -28,8 +36,20 @@ export default function Navbar() {
           </span>
         </div>
       </div>
-      <div>
+      <div className="flex">
         <Input placeholder="Search" />
+        <div>
+          <Select>
+            <SelectTrigger className="w-[108px]">
+              <SelectValue placeholder="USD" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="light">Light</SelectItem>
+              <SelectItem value="dark">Dark</SelectItem>
+              <SelectItem value="system">System</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </div>
   );
