@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import ThemeSwitch from "./ThemeSwitch";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -49,6 +50,9 @@ export default function Navbar() {
               <SelectItem value="system">System</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+        <div>
+          <ThemeSwitch />
         </div>
       </div>
     </div>

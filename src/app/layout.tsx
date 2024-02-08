@@ -3,6 +3,7 @@ import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import MarketDataHeader from "./components/MarketDataHeader";
+import { Providers } from "./providers";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -27,11 +28,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${spaceGrotesk.className} dark: bg-[#13121A]`}>
-        <MarketDataHeader />
-        <Navbar />
-        {children}
+    <html suppressHydrationWarning>
+      <body className={`${spaceGrotesk.className} dark:bg-[#13121A]`}>
+        <Providers>
+          <MarketDataHeader />
+          <Navbar />
+          {children}
+        </Providers>
       </body>
     </html>
   );
