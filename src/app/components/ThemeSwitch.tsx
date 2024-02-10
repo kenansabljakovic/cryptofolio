@@ -1,8 +1,6 @@
 "use client";
 
 import { FiSun, FiMoon } from "react-icons/fi";
-import { LightModeIcon } from "../icons/LightModeIcon";
-import { DarkModeIcon } from "../icons/DarkModeIcon";
 
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
@@ -18,9 +16,9 @@ export default function ThemeSwitch() {
     return (
       <Image
         src="data:image/svg+xml;base64,PHN2ZyBzdHJva2U9IiNGRkZGRkYiIGZpbGw9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMCIgdmlld0JveD0iMCAwIDI0IDI0IiBoZWlnaHQ9IjIwMHB4IiB3aWR0aD0iMjAwcHgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiB4PSIyIiB5PSIyIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHJ4PSIyIj48L3JlY3Q+PC9zdmc+Cg=="
-        width={36}
-        height={36}
-        sizes="36x36"
+        width={48}
+        height={48}
+        sizes="48x48"
         alt="Loading Light/Dark Toggle"
         priority={false}
         title="Loading Light/Dark Toggle"
@@ -28,10 +26,24 @@ export default function ThemeSwitch() {
     );
 
   if (resolvedTheme === "dark") {
-    return <FiSun onClick={() => setTheme("light")} />;
+    return (
+      <div
+        onClick={() => setTheme("light")}
+        className="dark:bg-[#191925] dark:opacity-100 bg-[#CCCCFA] opacity-40 dark:border-slate-800 w-12 h-12 flex items-center justify-center border border-white rounded-xl cursor-pointer"
+      >
+        <FiSun />
+      </div>
+    );
   }
 
   if (resolvedTheme === "light") {
-    return <FiMoon onClick={() => setTheme("dark")} />;
+    return (
+      <div
+        onClick={() => setTheme("dark")}
+        className="dark:bg-[#191925] dark:opacity-100 bg-[#CCCCFA] opacity-40 w-12 h-12 flex items-center justify-center rounded-xl cursor-pointer"
+      >
+        <FiMoon />
+      </div>
+    );
   }
 }

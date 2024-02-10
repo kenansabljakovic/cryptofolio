@@ -43,23 +43,24 @@ export default function Navbar() {
           </span>
         </div>
       </div>
-      <div className="flex">
-        <Input placeholder="Search" />
+      <div className="flex gap-4">
+        <Input
+          className={`${inter.className} dark:placeholder:text-[#D1D1D1] placeholder:text-[#424286] placeholder:text-sm placeholder:font-normal pl-12`}
+          placeholder="Search..."
+        />
         <div>
           <Select>
-            <SelectTrigger className="w-[108px]">
+            <SelectTrigger className="w-[108px] h-12 dark:bg-[#191925] dark:opacity-100 bg-[#CCCCFA] opacity-40">
               <SelectValue placeholder="USD" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="dark:bg-[#191925] dark:opacity-100 bg-[#CCCCFA] opacity-40">
               <SelectItem value="light">Light</SelectItem>
               <SelectItem value="dark">Dark</SelectItem>
               <SelectItem value="system">System</SelectItem>
             </SelectContent>
           </Select>
         </div>
-        <div>
-          <ThemeSwitch />
-        </div>
+        <ThemeSwitch />
       </div>
     </div>
   );
