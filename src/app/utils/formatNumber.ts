@@ -3,24 +3,24 @@ function formatNumber(number: number) {
   let formattedNumber = 0;
 
   if (number < 1e3) {
-    unit = ""; // No unit for numbers less than 1 thousand
+    unit = "";
     formattedNumber = number;
   } else if (number < 1e6) {
-    unit = "K"; // Thousands
+    unit = "K";
     formattedNumber = number / 1e3;
   } else if (number < 1e9) {
-    unit = "M"; // Millions
+    unit = "M";
     formattedNumber = number / 1e6;
   } else if (number < 1e12) {
-    unit = "B"; // Billions
+    unit = "B";
     formattedNumber = number / 1e9;
   } else if (number < 1e15) {
-    unit = "T"; // Trillions
+    unit = "T";
     formattedNumber = number / 1e12;
   } else if (number < 1e18) {
-    unit = "Q"; // Quadrillions
+    unit = "Q";
     formattedNumber = number / 1e15;
-  } // Add more else if blocks for larger units if necessary
+  } //
 
   return formattedNumber.toFixed(2) + " " + unit;
 }
