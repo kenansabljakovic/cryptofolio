@@ -20,7 +20,7 @@ const inter = Inter({
 
 export default function Navbar() {
   return (
-    <div className="max-w-[1440px] mx-auto mt-6 mb-[63px] xl:px-[72px] lg:px-[36px] md:px-[24px] flex justify-between">
+    <nav className="max-w-[1440px] mx-auto mt-6 mb-[63px] xl:px-[72px] lg:px-[36px] md:px-[24px] flex justify-between">
       <div className="flex items-center gap-[10px] text-white font-bold">
         <CryptofolioLogoIcon />
         <span
@@ -62,6 +62,6 @@ export default function Navbar() {
         </div>
         <ThemeSwitch />
       </div>
-    </div>
+    </nav>
   );
 }
