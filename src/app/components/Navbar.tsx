@@ -2,14 +2,14 @@ import { Inter } from "next/font/google";
 import { CryptofolioLogoIcon } from "../icons/CryptofolioLogoIcon";
 import { HomeIcon } from "../icons/HomeIcon";
 import { PortfolioGreyIcon } from "../icons/PortfolioGreyIcon";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/app/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/app/components/ui/select";
 import ThemeSwitch from "./ThemeSwitch";
 
 const inter = Inter({
