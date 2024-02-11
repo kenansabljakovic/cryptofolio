@@ -10,7 +10,7 @@ import MarketPercentageBar from "./MarketPercentageBar";
 
 async function getMarketData() {
   const res = await fetch(
-    "https://api.coingecko.com/api/v3/global?x_cg_demo_api_key=CG-q2aLp44XjWCoV41TwyFeLSnE",
+    `https://api.coingecko.com/api/v3/global?x_cg_demo_api_key=${process.env.COIN_GECKO_API_KEY}`,
     {
       next: {
         revalidate: 0,
