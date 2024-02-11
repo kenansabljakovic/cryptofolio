@@ -31,8 +31,10 @@ export default function RootLayout({
     <html suppressHydrationWarning>
       <body className={`${spaceGrotesk.className} dark:bg-[#13121A]`}>
         <Providers>
-          <MarketDataHeader />
-          <Navbar />
+          <header>
+            <MarketDataHeader />
+            <Navbar />
+          </header>
           {children}
         </Providers>
       </body>
