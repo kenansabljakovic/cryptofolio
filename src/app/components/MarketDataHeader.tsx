@@ -21,7 +21,7 @@ async function getMarketData() {
 }
 
 export default async function MarketDataHeader() {
-  const marketData = await getMarketData();
+  const { data } = await getMarketData();
   const {
     active_cryptocurrencies,
     markets,
@@ -29,7 +29,7 @@ export default async function MarketDataHeader() {
     total_volume,
     market_cap_percentage,
     market_cap_change_percentage_24h_usd,
-  } = marketData.data;
+  } = data;
 
   const percentageVolumeBasedOnTotalMarketCap = getPercentage(
     total_volume.btc,
