@@ -21,7 +21,7 @@ async function getMarketData() {
 }
 
 export default async function MarketDataHeader() {
-  const marketData = await getMarketData();
+  const { data } = await getMarketData();
   const {
     active_cryptocurrencies,
     markets,
@@ -29,7 +29,7 @@ export default async function MarketDataHeader() {
     total_volume,
     market_cap_percentage,
     market_cap_change_percentage_24h_usd,
-  } = marketData.data;
+  } = data;
 
   const percentageVolumeBasedOnTotalMarketCap = getPercentage(
     total_volume.btc,
@@ -37,13 +37,14 @@ export default async function MarketDataHeader() {
   );
   const btcMarketCapPercentage = Math.floor(market_cap_percentage.btc);
   const ethMarketCapPercentage = Math.floor(market_cap_percentage.eth);
+
   return (
     <div className="w-full mx-auto dark:bg-[#1E1932] bg-[#353570] py-4 lg:px-[72px] flex gap-4 justify-center">
       <div className="flex items-center gap-1">
         <CoinsIcon />
         <span className="text-[#D1D1D1] text-xs font-medium">Coins</span>
         <span className="text-xs text-white font-medium">
-          {active_cryptocurrencies ? active_cryptocurrencies : ""}
+          {active_cryptocurrencies && active_cryptocurrencies}
         </span>
       </div>
       <div className="flex items-center gap-1">
