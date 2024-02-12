@@ -1,4 +1,4 @@
-function formatNumber(number: number) {
+const formatNumber = (number: number) => {
   let unit = "";
   let formattedNumber = 0;
 
@@ -23,6 +23,6 @@ function formatNumber(number: number) {
   } //
 
   return formattedNumber.toFixed(2) + " " + unit;
-}
+};
 
 export default formatNumber;

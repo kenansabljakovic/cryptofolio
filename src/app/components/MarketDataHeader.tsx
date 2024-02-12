@@ -4,6 +4,7 @@ import { ChevronUpIcon } from "../icons/ChevronUpIcon";
 import { BitcoinIcon } from "../icons/BitcoinIcon";
 import { EthereumIcon } from "../icons/EthereumIcon";
 import { ChevronDownIcon } from "../icons/ChevronDownIcon";
+import { Progress } from "../components/ui/progress";
 import formatNumber from "@/app/utils/formatNumber";
 import getPercentage from "@/app/utils/getPercentage";
 import MarketPercentageBar from "./MarketPercentageBar";
@@ -76,28 +77,31 @@ export default async function MarketDataHeader() {
       </div>
       <div className="flex items-center gap-1">
         <span className="text-xs text-white font-medium">$</span>
-        <span className="w-full text-xs text-white font-medium">
+        <span className="text-xs text-white font-medium">
           {formatNumber(total_volume.usd)}
         </span>
-        <MarketPercentageBar
-          fill="bg-white"
-          percentage={percentageVolumeBasedOnTotalMarketCap}
+        <Progress
+          className="w-[53px] h-[6px] bg-gray-500"
+          value={percentageVolumeBasedOnTotalMarketCap}
+          indicator="bg-white"
         />
       </div>
       <div className="flex items-center gap-1">
         <BitcoinIcon />
         <span className="text-xs text-white font-medium">{`${btcMarketCapPercentage}%`}</span>
-        <MarketPercentageBar
-          fill="bg-[#F7931A]"
-          percentage={btcMarketCapPercentage}
+        <Progress
+          className="w-[53px] h-[6px] bg-gray-500"
+          value={btcMarketCapPercentage}
+          indicator="bg-[#F7931A]"
         />
       </div>
       <div className="flex items-center gap-1">
         <EthereumIcon />
         <span className="text-xs text-white font-medium">{`${ethMarketCapPercentage}%`}</span>
-        <MarketPercentageBar
-          fill="bg-[#849DFF]"
-          percentage={ethMarketCapPercentage}
+        <Progress
+          className="w-[53px] h-[6px] bg-gray-500"
+          value={ethMarketCapPercentage}
+          indicator="bg-[#849DFF]"
         />
       </div>
     </div>
