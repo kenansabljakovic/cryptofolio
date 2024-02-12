@@ -7,7 +7,6 @@ import { ChevronDownIcon } from "../icons/ChevronDownIcon";
 import { Progress } from "../components/ui/progress";
 import formatNumber from "@/app/utils/formatNumber";
 import getPercentage from "@/app/utils/getPercentage";
-import MarketPercentageBar from "./MarketPercentageBar";
 
 async function getMarketData() {
   const res = await fetch(
