@@ -4,7 +4,6 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import MarketDataHeader from "./components/MarketDataHeader";
 import { Providers } from "./providers";
-import { ReduxProvider } from "../redux/provider";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -27,15 +26,13 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.className} dark:bg-[#13121A] bg-[#F3F5F9]`}
       >
-        <ReduxProvider>
-          <Providers>
-            <header>
-              <MarketDataHeader />
-              <Navbar />
-            </header>
-            {children}
-          </Providers>
-        </ReduxProvider>
+        <Providers>
+          <header>
+            <MarketDataHeader />
+            <Navbar />
+          </header>
+          {children}
+        </Providers>
       </body>
     </html>
   );
