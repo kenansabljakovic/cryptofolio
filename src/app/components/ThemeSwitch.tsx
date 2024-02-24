@@ -29,7 +29,7 @@ export default function ThemeSwitch() {
     return (
       <button
         onClick={() => setTheme("light")}
-        className="dark:bg-[#191925] dark:opacity-100 bg-[#CCCCFA] opacity-40 dark:border-slate-800 lg:w-12 lg:h-12 md:w-11 md:h-11 flex items-center justify-center border border-white rounded-xl cursor-pointer"
+        className="dark:bg-[#191925] dark:opacity-100 bg-[#CCCCFA] bg-opacity-40 dark:border-slate-800 lg:w-12 lg:h-12 md:w-11 md:h-11 flex items-center justify-center border border-white rounded-xl cursor-pointer"
       >
         <FiSun />
       </button>

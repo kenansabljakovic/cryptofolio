@@ -10,18 +10,21 @@ import { BitcoinIcon } from "../icons/BitcoinIcon";
 import { EthereumIcon } from "../icons/EthereumIcon";
 import { ChevronDownIcon } from "../icons/ChevronDownIcon";
 import { Progress } from "../components/ui/progress";
-import formatNumber from "@/app/utils/formatNumber";
-import getPercentage from "@/app/utils/getPercentage";
+import formatNumber from "../../app/utils/formatNumber";
+import getPercentage from "../../app/utils/getPercentage";
 
 export default function MarketDataHeader() {
   const dispatch: AppDispatch = useDispatch();
   const { data, isLoading, hasError } = useAppSelector(
     (state) => state.globalData
   );
+  const { symbol, code } = useAppSelector(
+    (state) => state.currency.currentCurrency
+  );
 
   useEffect(() => {
     dispatch(getGlobalData());
-  }, []);
+  }, [dispatch, code]);
 
   const hasData: boolean = !isLoading && !hasError;
   const percentageVolumeBasedOnTotalMarketCap = getPercentage(
@@ -55,9 +58,9 @@ export default function MarketDataHeader() {
             <span className="text-[#D1D1D1] text-xs font-medium">
               Market Cap
             </span>
-            <span className="text-xs text-white font-medium">$</span>
+            <span className="text-xs text-white font-medium">{symbol}</span>
             <span className="text-xs text-white font-medium">
-              {formatNumber(data.total_market_cap.usd)}
+              {formatNumber(data.total_market_cap[code])}
             </span>
             {data.market_cap_change_percentage_24h_usd > 0 ? (
               <ChevronUpIcon />
@@ -67,17 +70,17 @@ export default function MarketDataHeader() {
             <span
               className={`text-xs font-medium ${
                 data.market_cap_change_percentage_24h_usd > 0
-                  ? "text-green-700"
-                  : "text-red-500"
+                  ? "text-[#00F0E2]"
+                  : "text-[#FD2263]"
               }`}
             >
               {Math.abs(data.market_cap_change_percentage_24h_usd).toFixed(2)}
             </span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="text-xs text-white font-medium">$</span>
+            <span className="text-xs text-white font-medium">{symbol}</span>
             <span className="text-xs text-white font-medium">
-              {formatNumber(data.total_volume.usd)}
+              {formatNumber(data.total_volume[code])}
             </span>
             <Progress
               className="w-[53px] h-[6px] bg-gray-500"
