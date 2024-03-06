@@ -7,6 +7,7 @@ import { AppDispatch, useAppSelector } from "../../redux/store";
 import { getCoinData } from "../../redux/features/coinInfoSlice";
 import { ChevronUpIcon } from "../icons/ChevronUpIcon";
 import { ChevronDownIcon } from "../icons/ChevronDownIcon";
+
 import {
   Carousel,
   CarouselContent,
@@ -31,6 +32,9 @@ export default function CarouselCoins() {
   if (isLoading) return <div>Loading...</div>;
   if (hasError) return <div>Error loading the data.</div>;
 
+  const handleCarousel = (coin: string) => {
+    //implement in next PR
+  };
   return (
     <Carousel
       opts={{
@@ -44,7 +48,10 @@ export default function CarouselCoins() {
             key={coin.id}
             className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
           >
-            <div className="h-[88px] dark:bg-[#191925] bg-[#FFFFFF] flex items-center rounded-lg cursor-pointer">
+            <div
+              onClick={() => handleCarousel(coin.id)}
+              className="h-[88px] dark:bg-[#191925] bg-[#FFFFFF] flex items-center rounded-lg cursor-pointer"
+            >
               <div className="px-4">
                 <Image
                   src={coin.image}
