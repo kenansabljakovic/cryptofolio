@@ -7,6 +7,7 @@ import { AppDispatch, useAppSelector } from "../../redux/store";
 import { getCoinData } from "../../redux/features/coinInfoSlice";
 import { ChevronUpIcon } from "../icons/ChevronUpIcon";
 import { ChevronDownIcon } from "../icons/ChevronDownIcon";
+
 import {
   Carousel,
   CarouselContent,
@@ -24,6 +25,10 @@ export default function CarouselCoins() {
     (state) => state.currency.currentCurrency.code
   );
 
+  const currencySymbol = useAppSelector(
+    (state) => state.currency.currentCurrency.symbol
+  );
+
   useEffect(() => {
     dispatch(getCoinData(currencyCode));
   }, [dispatch, currencyCode]);
@@ -31,6 +36,9 @@ export default function CarouselCoins() {
   if (isLoading) return <div>Loading...</div>;
   if (hasError) return <div>Error loading the data.</div>;
 
+  const handleCarousel = (coin: string) => {
+    //implement in next PR
+  };
   return (
     <Carousel
       opts={{
@@ -44,22 +52,20 @@ export default function CarouselCoins() {
             key={coin.id}
             className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
           >
-            <div className="h-[88px] dark:bg-[#191925] bg-[#FFFFFF] flex items-center rounded-lg cursor-pointer">
-              <div className="px-4">
-                <Image
-                  src={coin.image}
-                  alt={coin.name}
-                  width={32}
-                  height={32}
-                />
-              </div>
-              <div className="flex flex-col pr-4">
-                <h2 className="text-[16px] dark:text-white text-[#181825] font-medium leading-6">
+            <button
+              onClick={() => handleCarousel(coin.id)}
+              className="h-[88px] w-full dark:bg-[#191925] bg-[rgb(255,255,255)] flex items-center gap-4 rounded-lg cursor-pointer px-4"
+            >
+              <Image src={coin.image} alt={coin.name} width={32} height={32} />
+
+              <div className="flex flex-col">
+                <h2 className="text-[16px] dark:text-white text-[#181825] font-medium leading-6 text-left">
                   {coin.name} ({coin.symbol.toUpperCase()})
                 </h2>
                 <div className="flex items-center gap-2">
                   <span className="dark:text-[#D1D1D1] text-[#424286] text-sm font-normal leading-4">
-                    {coin.current_price} {currencyCode.toUpperCase()}
+                    {currencySymbol}
+                    {coin.current_price}
                   </span>
                   {coin.price_change_percentage_24h > 0 ? (
                     <ChevronUpIcon />
@@ -77,7 +83,7 @@ export default function CarouselCoins() {
                   </span>
                 </div>
               </div>
-            </div>
+            </button>
           </CarouselItem>
         ))}
       </CarouselContent>
