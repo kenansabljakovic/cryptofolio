@@ -47,7 +47,7 @@ export default function CarouselCoins() {
       className="w-full"
     >
       <CarouselContent>
-        {data.map((coin) => (
+        {data?.map((coin) => (
           <CarouselItem
             key={coin.id}
             className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
