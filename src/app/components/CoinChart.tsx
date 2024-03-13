@@ -72,10 +72,6 @@ export default function CoinChart({
     }
   }, [selectedCoins, chartType, currencyCode]);
 
-  /* if (loading === "pending") {
-    return <div>Loading...</div>;
-  } */
-
   if (hasError) {
     return <div>Error fetching data</div>;
   }
