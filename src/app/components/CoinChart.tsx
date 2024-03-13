@@ -13,6 +13,7 @@ import {
 import { AppDispatch, useAppSelector } from "../../redux/store";
 import { getCoinDataGraph } from "../../redux/features/selectedCoinSlice";
 import formatNumber from "../utils/formatNumber";
+import formatDateGraphs from "../utils/formatDateGraph";
 
 type Payload = {
   date: string;
@@ -107,34 +108,6 @@ export default function CoinChart({
     }
   };
 
-  const formatDateGraphs = (tick: string): string => {
-    const date = new Date(tick);
-    let formattedDate: string;
-
-    if (days === "1") {
-      formattedDate = date.toLocaleTimeString(undefined, {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      });
-    } else if (["7", "14", "30"].includes(days)) {
-      formattedDate = date.toLocaleDateString(undefined, {
-        day: "numeric",
-        month: "short",
-      });
-    } else if (["90", "180", "365", "max"].includes(days)) {
-      formattedDate = date.toLocaleDateString(undefined, {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      });
-    } else {
-      formattedDate = date.toLocaleDateString();
-    }
-
-    return formattedDate;
-  };
-
   return (
     <div
       className={`w-full h-[404px] flex flex-col ${
@@ -169,7 +142,7 @@ export default function CoinChart({
               dataKey="date"
               axisLine={false}
               tickLine={false}
-              tickFormatter={formatDateGraphs}
+              tickFormatter={(tick) => formatDateGraphs(tick, days)}
             />
             <Tooltip content={<></>} />
             <Bar dataKey="volume" stroke="" fill="url(#colorBarChart)" />
@@ -193,7 +166,7 @@ export default function CoinChart({
               dataKey="date"
               axisLine={false}
               tickLine={false}
-              tickFormatter={formatDateGraphs}
+              tickFormatter={(tick) => formatDateGraphs(tick, days)}
             />
 
             <Tooltip content={<></>} />
