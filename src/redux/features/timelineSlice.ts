@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type TimelineItem = {
+export type TimelineItem = {
   id: number;
   days: string;
   display: string;
