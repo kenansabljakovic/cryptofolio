@@ -13,6 +13,7 @@ import {
 import { AppDispatch, useAppSelector } from "../../redux/store";
 import { getCoinDataGraph } from "../../redux/features/selectedCoinSlice";
 import formatNumber from "../utils/formatNumber";
+import formatDateGraphs from "../utils/formatDateGraph";
 
 type Payload = {
   date: string;
@@ -35,14 +36,19 @@ export default function CoinChart({
   const { selectedCoins, loading, hasError } = useAppSelector(
     (state) => state.selectedCoin
   );
+  const days = useAppSelector((state) => state.timeline.currentTimeline.days);
   const [currentValue, setCurrentValue] = useState("");
   const [currentDate, setCurrentDate] = useState("");
 
   useEffect(() => {
     dispatch(
-      getCoinDataGraph({ currency: currencyCode, days: "3", coinId: "bitcoin" })
+      getCoinDataGraph({
+        currency: currencyCode,
+        days: days,
+        coinId: "bitcoin",
+      })
     );
-  }, [dispatch, currencyCode]);
+  }, [dispatch, currencyCode, days]);
 
   useEffect(() => {
     if (selectedCoins.length > 0) {
@@ -53,16 +59,19 @@ export default function CoinChart({
               selectedCoins[0].total_volumes.length - 1
             ];
       const lastValue = lastDataPoint[1];
-      const lastDate = new Date(lastDataPoint[0]).toLocaleDateString();
+      const lastDate = new Date(lastDataPoint[0]).toLocaleDateString(
+        undefined,
+        {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        }
+      );
 
       setCurrentValue(`${lastValue.toFixed(2)}`);
       setCurrentDate(lastDate);
     }
   }, [selectedCoins, chartType, currencyCode]);
-
-  if (loading === "pending") {
-    return <div>Loading...</div>;
-  }
 
   if (hasError) {
     return <div>Error fetching data</div>;
@@ -73,11 +82,11 @@ export default function CoinChart({
   const formattedData = coin
     ? chartType === "price"
       ? coin.prices.map(([time, value]) => ({
-          date: new Date(time).toLocaleDateString(),
+          date: new Date(time),
           value,
         }))
       : coin.total_volumes.map(([time, volume]) => ({
-          date: new Date(time).toLocaleDateString(),
+          date: new Date(time),
           volume,
         }))
     : [];
@@ -87,13 +96,24 @@ export default function CoinChart({
       const { payload } = e.activePayload[0];
       const dataKey = chartType === "price" ? "value" : "volume";
       const value = payload[dataKey]?.toFixed(2) ?? "0";
+      const date = new Date(payload.date);
       setCurrentValue(value);
-      setCurrentDate(payload.date);
+      setCurrentDate(
+        date.toLocaleDateString(undefined, {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        })
+      );
     }
   };
 
   return (
-    <div className="w-full h-[404px] flex flex-col dark:bg-[#1E1932] bg-white rounded-xl p-6">
+    <div
+      className={`w-full h-[404px] flex flex-col ${
+        chartType === "volume" ? "dark:bg-[#1E1932]" : "dark:bg-[#191932]"
+      } bg-white rounded-xl p-6`}
+    >
       <div className="flex flex-col">
         <span className="text-xl font-normal dark:text-[#D1D1D1] text-[#191932] leading-6">
           {chartType === "volume"
@@ -113,19 +133,24 @@ export default function CoinChart({
         {chartType === "volume" ? (
           <BarChart data={formattedData} onMouseMove={handleMouseMove}>
             <defs>
-              <linearGradient id="color" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="colorBarChart" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="1%" stopColor="#B374F2" />
                 <stop offset="100%" stopColor="#9D62D9" />
               </linearGradient>
             </defs>
-            <XAxis dataKey="date" />
+            <XAxis
+              dataKey="date"
+              axisLine={false}
+              tickLine={false}
+              tickFormatter={(tick) => formatDateGraphs(tick, days)}
+            />
             <Tooltip content={<></>} />
-            <Bar dataKey="volume" stroke="" fill="url(#color)" />
+            <Bar dataKey="volume" stroke="" fill="url(#colorBarChart)" />
           </BarChart>
         ) : (
           <AreaChart data={formattedData} onMouseMove={handleMouseMove}>
             <defs>
-              <linearGradient id="color" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="colorAreaChart" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="1%" stopColor="#7474F2" stopOpacity={0.6} />
                 <stop offset="60%" stopColor="#7474F2" stopOpacity={0.1} />
               </linearGradient>
@@ -134,10 +159,15 @@ export default function CoinChart({
               dataKey="value"
               stroke="#7878FA"
               strokeWidth="3"
-              fill="url(#color)"
+              fill="url(#colorAreaChart)"
             />
 
-            <XAxis dataKey="date" axisLine={false} tickLine={false} />
+            <XAxis
+              dataKey="date"
+              axisLine={false}
+              tickLine={false}
+              tickFormatter={(tick) => formatDateGraphs(tick, days)}
+            />
 
             <Tooltip content={<></>} />
           </AreaChart>
