@@ -49,9 +49,9 @@ export default function CoinsMarketStats({
           <div className="flex items-center gap-4">
             <Image src={coin.image} alt={coin.id} width={32} height={32} />
             <>
-              <span className="dark:text-white text-[#232336] text-base font-medium leading-6">{`${coin.id
-                .charAt(0)
-                .toUpperCase()}${coin.id.slice(1)}`}</span>{" "}
+              <span className="dark:text-white text-[#232336] text-base font-medium capitalize leading-6">
+                {coin.id}
+              </span>
               <span className="dark:text-white text-[#232336] text-base font-medium leading-6 uppercase">
                 ({coin.symbol})
               </span>
@@ -98,11 +98,23 @@ export default function CoinsMarketStats({
             )}%`}</span>
           </div>
         </TableCell>
-        {/* For some reason I cannot get price_change_percentage_7d_in_currency to work. I am getting undefined.*/}
-        <TableCell className="dark:text-white text-[#232336] text-base font-medium leading-6">
-          {`${Math.abs(coin?.price_change_percentage_7d_in_currency).toFixed(
-            2
-          )}%`}
+        <TableCell>
+          <div className="flex items-center gap-[6px]">
+            {coin.price_change_percentage_7d_in_currency > 0 ? (
+              <ChevronUpIcon />
+            ) : (
+              <ChevronDownIcon />
+            )}
+            <span
+              className={`text-base font-medium leading-6 ${
+                coin.price_change_percentage_7d_in_currency > 0
+                  ? "text-[#00F0E2]"
+                  : "text-[#FD2263]"
+              }`}
+            >{`${Math.abs(coin.price_change_percentage_7d_in_currency).toFixed(
+              2
+            )}%`}</span>
+          </div>
         </TableCell>
         <TableCell className="dark:text-white text-[#232336] text-base font-medium leading-6">
           <div className="flex justify-between">
