@@ -9,7 +9,7 @@ import CoinsMarketStats from "./CoinsMarketStats";
 
 export default function TableCoins() {
   const dispatch: AppDispatch = useDispatch();
-  const { coins, loading, hasError, currentPage } = useAppSelector(
+  const { coins, hasError, currentPage } = useAppSelector(
     (state) => state.coinsTable
   );
 
@@ -60,11 +60,7 @@ export default function TableCoins() {
       </TableHeader>
       <TableBody>
         {coins.map((coin, index) => (
-          <CoinsMarketStats
-            coin={coin}
-            index={index}
-            key={`${coin.id}-${Math.random()}`}
-          />
+          <CoinsMarketStats coin={coin} index={index} key={coin.id} />
         ))}
       </TableBody>
     </Table>
