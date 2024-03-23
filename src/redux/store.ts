@@ -6,6 +6,7 @@ import currencyReducer from "./features/currencySlice";
 import coinReducer from "./features/coinInfoSlice";
 import selectedCoinReducer from "./features/selectedCoinSlice";
 import timelineReducer from "./features/timelineSlice";
+import coinTableReducer from "./features/coinsTableSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     coinData: coinReducer,
     selectedCoin: selectedCoinReducer,
     timeline: timelineReducer,
+    coinsTable: coinTableReducer,
   },
 });
 

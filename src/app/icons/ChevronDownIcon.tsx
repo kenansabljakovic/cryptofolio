@@ -1,10 +1,16 @@
 export const ChevronDownIcon = () => {
   return (
-    <svg width="17" height="16" viewBox="0 0 17 16" fill="none">
+    <svg
+      width="8"
+      height="4"
+      viewBox="0 0 8 4"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
-        d="M8.39974 9.66699L11.7331 6.33366L5.06641 6.33366L8.39974 9.66699Z"
+        d="M3.99935 3.66699L7.33268 0.333659L0.666016 0.333659L3.99935 3.66699Z"
         fill="#FE2264"
-        style={{ fill: "#FE2264", fillOpacity: 1 }}
+        style={{ fillOpacity: 1 }}
       />
     </svg>
   );
