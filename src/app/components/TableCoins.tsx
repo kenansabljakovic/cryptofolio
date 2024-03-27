@@ -29,7 +29,7 @@ export default function TableCoins() {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
+          <TableHead className="hidden lg:table-cell text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
             #
           </TableHead>
           <TableHead className="text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
@@ -44,16 +44,16 @@ export default function TableCoins() {
           <TableHead className="text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
             24h%
           </TableHead>
-          <TableHead className="text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
+          <TableHead className="hidden sm:table-cell text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
             7d%
           </TableHead>
-          <TableHead className="text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
+          <TableHead className="hidden md:table-cell text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
             24h volume / Market Cap
           </TableHead>
-          <TableHead className="text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
+          <TableHead className="hidden lg:table-cell text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
             Circulating / Total supply
           </TableHead>
-          <TableHead className="w-[162px] text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
+          <TableHead className="hidden xl:table-cell w-[162px] text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
             Last 7d
           </TableHead>
         </TableRow>
