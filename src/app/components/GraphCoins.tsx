@@ -10,7 +10,7 @@ export default function GraphCoins() {
     (state) => state.currency.currentCurrency.symbol
   );
   return (
-    <div className="w-full flex gap-8">
+    <div className="w-full flex flex-wrap md:flex-nowrap gap-4 lg:gap-8">
       <CoinChart
         chartType="price"
         currencyCode={currencyCode}

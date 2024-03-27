@@ -10,7 +10,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
     return (
       <div className="relative">
-        <SearchIcon className="absolute top-[14px] left-4 h-[20px] w-[20px] dark:text-[#D1D1D1] text-[#424286] text-opacity-80" />
+        <SearchIcon className="absolute top-[7px] left-[14px] sm:top-[10px] md:top-[13px] lg:top-[14px] h-[20px] w-[20px] dark:text-[#D1D1D1] text-[#424286] text-opacity-80" />
         <input
           type={type}
           className={cn(

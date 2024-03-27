@@ -46,49 +46,62 @@ export default function CarouselCoins() {
       }}
       className="w-full"
     >
-      <CarouselContent>
+      <CarouselContent className="-ml-1 sm:-ml-2">
         {data?.map((coin) => (
           <CarouselItem
             key={coin.id}
-            className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+            className="pl-1 basis-1/4 sm:basis-1/2 sm:pl-2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
           >
             <button
               onClick={() => handleCarousel(coin.id)}
-              className="h-[88px] w-full dark:bg-[#191925] bg-[rgb(255,255,255)] flex items-center gap-4 rounded-lg cursor-pointer px-4"
+              className="px-2 py-2 w-full sm:h-[88px] sm:w-full dark:bg-[#232336] sm:dark:bg-[#191925] bg-[rgb(255,255,255)] flex items-center gap-1 sm:gap-4 rounded-lg cursor-pointer sm:px-4"
             >
-              <Image src={coin.image} alt={coin.name} width={32} height={32} />
+              <Image
+                className="w-6 h-6 sm:w-8 sm:h-8"
+                src={coin.image}
+                alt={coin.name}
+                width={32}
+                height={32}
+              />
 
-              <div className="flex flex-col">
-                <h2 className="text-[16px] dark:text-white text-[#181825] font-medium leading-6 text-left">
-                  {coin.name} ({coin.symbol.toUpperCase()})
-                </h2>
-                <div className="flex items-center gap-2">
+              <div className="flex sm:flex-col items-center sm:items-start gap-4 sm:gap-0">
+                <div className="text-[16px] dark:text-white text-[#181825] font-medium leading-6 text-left">
+                  <span className="hidden sm:inline">{coin.name}</span>{" "}
+                  <span className="uppercase text-sm font-medium sm:text-base">
+                    {coin.symbol}
+                  </span>
+                </div>
+                <div className="hidden sm:flex sm:flex-row sm:items-center sm:gap-2">
                   <span className="dark:text-[#D1D1D1] text-[#424286] text-sm font-normal leading-4">
                     {currencySymbol}
                     {coin.current_price}
                   </span>
-                  {coin.price_change_percentage_24h > 0 ? (
-                    <ChevronUpIcon />
-                  ) : (
-                    <ChevronDownIcon />
-                  )}
-                  <span
-                    className={`text-sm font-normal ${
-                      coin.price_change_percentage_24h < 0
-                        ? "text-[#FD2263]"
-                        : "text-[#00F0E2]"
-                    }`}
-                  >
-                    {Math.abs(coin.price_change_percentage_24h).toFixed(2)}%
-                  </span>
+                  <div className="flex items-center gap-1">
+                    <span className="">
+                      {coin.price_change_percentage_24h > 0 ? (
+                        <ChevronUpIcon />
+                      ) : (
+                        <ChevronDownIcon />
+                      )}
+                    </span>
+                    <span
+                      className={`text-sm font-normal ${
+                        coin.price_change_percentage_24h < 0
+                          ? "text-[#FD2263]"
+                          : "text-[#00F0E2]"
+                      }`}
+                    >
+                      {Math.abs(coin.price_change_percentage_24h).toFixed(2)}%
+                    </span>
+                  </div>
                 </div>
               </div>
             </button>
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="dark:bg-[#6161D6] dark:bg-opacity-50 bg-[#6161D6] bg-opacity-50 dark:hover:bg-[#6161D6] hover:bg-[#6161D6] hover:bg-opacity-70" />
-      <CarouselNext className="dark:bg-[#6161D6] dark:bg-opacity-50 bg-[#6161D6] bg-opacity-50 dark:hover:bg-[#6161D6] hover:bg-[#6161D6] hover:bg-opacity-70" />
+      <CarouselPrevious className="hidden dark:bg-[#6161D6] dark:bg-opacity-50 bg-[#6161D6] bg-opacity-50 dark:hover:bg-[#6161D6] hover:bg-[#6161D6] hover:bg-opacity-70" />
+      <CarouselNext className="hidden sm:inline-flex dark:bg-[#6161D6] dark:bg-opacity-50 bg-[#6161D6] bg-opacity-50 dark:hover:bg-[#6161D6] hover:bg-[#6161D6] hover:bg-opacity-70" />
     </Carousel>
   );
 }
