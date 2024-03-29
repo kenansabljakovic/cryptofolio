@@ -14,7 +14,7 @@ export default function StyledHomePageLink({
   const pathname = usePathname();
 
   const baseStyle =
-    "w-[244px] h-[45px] flex items-center justify-center rounded-md text-base font-normal focus:outline-none";
+    "w-[167px] lg:w-[199px] xl:w-[244px] h-[45px] flex items-center justify-center rounded-md text-base font-normal focus:outline-none";
   const activeStyle =
     "bg-[rgb(120,120,250,0.7)] border border-[#7878FA] text-white shadow-md";
   const inactiveStyle =

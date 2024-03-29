@@ -205,16 +205,13 @@ const CarouselPrevious = React.forwardRef<
       ref={ref}
       variant={variant}
       size={size}
-      className={cn(
-        "absolute  h-12 w-12 rounded-full",
+      className={`absolute h-12 w-12 rounded-full ${
         orientation === "horizontal"
           ? "-left-10 top-1/2 -translate-y-1/2"
-          : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
-        {
-          hidden: !canScrollPrev,
-        },
-        className
-      )}
+          : "-top-12 left-1/2 -translate-x-1/2 rotate-90"
+      } ${
+        canScrollPrev ? "sm:inline-flex" : "hidden"
+      } dark:bg-[#6161D6] dark:bg-opacity-50 bg-[#6161D6] bg-opacity-50 dark:hover:bg-[#6161D6] hover:bg-[#6161D6] hover:bg-opacity-70 ${className}`}
       disabled={!canScrollPrev}
       onClick={scrollPrev}
       {...props}

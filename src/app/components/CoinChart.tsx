@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
   AreaChart,
   Area,
+  YAxis,
 } from "recharts";
 import { AppDispatch, useAppSelector } from "../../redux/store";
 import { getCoinDataGraph } from "../../redux/features/selectedCoinSlice";
@@ -110,22 +111,27 @@ export default function CoinChart({
 
   return (
     <div
-      className={`w-full h-[404px] flex flex-col ${
+      className={`w-full flex flex-col ${
         chartType === "volume" ? "dark:bg-[#1E1932]" : "dark:bg-[#191932]"
-      } bg-white rounded-xl p-6`}
+      } bg-white rounded-xl pt-4 lg:pt-6 pb-1 lg:pb-2 px-4 lg:px-6`}
     >
       <div className="flex flex-col">
-        <span className="text-xl font-normal dark:text-[#D1D1D1] text-[#191932] leading-6">
-          {chartType === "volume"
-            ? "Volume 24h"
-            : `${coin?.id.charAt(0).toUpperCase()}${coin?.id.slice(1)}`}
+        <div>
+          {chartType === "volume" ? (
+            <span className="text-base leading-5 sm:text-xl font-normal dark:text-[#D1D1D1] text-[#191932] sm:leading-6">
+              {coin?.id && "Volume 24h"}
+            </span>
+          ) : (
+            <span className="text-base leading-5 sm:text-xl font-normal dark:text-[#D1D1D1] text-[#191932] sm:leading-6 capitalize">
+              {coin?.id}
+            </span>
+          )}
+        </div>
+        <span className="text-xl sm:text-[28px] font-medium sm:font-bold leading-7 mt-3 sm:mt-6">
+          {currentValue &&
+            `${currencySymbol}${formatNumber(parseFloat(currentValue))}`}
         </span>
-        <span className="text-[28px] font-bold leading-7 mt-6">
-          {currentValue
-            ? `${currencySymbol}${formatNumber(parseFloat(currentValue))}`
-            : "Fetching..."}
-        </span>
-        <span className="text-base font-normal dark:text-[#B9B9BA] text-[#424286] leading-6 mt-4">
+        <span className="text-xs leading-4 mt-2 sm:text-base font-normal dark:text-[#B9B9BA] text-[#424286] sm:leading-6 sm:mt-4">
           {currentDate}
         </span>
       </div>
@@ -155,13 +161,14 @@ export default function CoinChart({
                 <stop offset="60%" stopColor="#7474F2" stopOpacity={0.1} />
               </linearGradient>
             </defs>
+
             <Area
               dataKey="value"
               stroke="#7878FA"
               strokeWidth="3"
               fill="url(#colorAreaChart)"
             />
-
+            <YAxis hide={true} domain={["dataMin", "dataMax"]} />
             <XAxis
               dataKey="date"
               axisLine={false}
