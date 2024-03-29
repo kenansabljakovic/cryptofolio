@@ -35,13 +35,13 @@ export default function DropDownCurrencies() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="lg:w-[108px] lg:h-12 md:w-[80px] md:h-11 dark:bg-[#191925] dark:opacity-100 bg-[#CCCCFA] bg-opacity-40"
+          className="w-[65px] h-9 sm:w-[90px] sm:h-10 md:w-[95px] md:h-11 lg:w-[108px] lg:h-12 dark:bg-[#191925] dark:opacity-100 bg-[#CCCCFA] bg-opacity-40"
         >
           <div className="flex gap-2 items-center">
-            <span className="dark:bg-white dark:text-black bg-[#424286] text-white rounded-full px-[6px]">
+            <span className="hidden sm:inline sm:dark:bg-white sm:dark:text-black sm:bg-[#424286] sm:text-white sm:rounded-full sm:px-[6px]">
               {currentCurrency.symbol}
             </span>
-            <span className="dark:text-[#D1D1D1] text-[#424286] text-opacity-80 uppercase">
+            <span className="dark:text-[#D1D1D1] text-[#424286] text-sm font-medium leading-6 text-opacity-80 uppercase">
               {currentCurrency.code}
             </span>
           </div>

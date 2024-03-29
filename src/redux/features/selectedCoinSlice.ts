@@ -31,7 +31,7 @@ export const getCoinDataGraph = createAsyncThunk(
   async ({ currency, days, coinId }: GetCoinDataArgs, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=${currency}&days=${days}?x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`
+        `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=${currency}&days=${days}&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`
       );
 
       if (!response.ok) {
