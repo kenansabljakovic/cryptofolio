@@ -26,17 +26,20 @@ type CoinChartProps = {
   chartType: "price" | "volume";
   currencyCode: string;
   currencySymbol?: string;
+  selectedCoin: string;
 };
 
 export default function CoinChart({
   chartType,
   currencyCode,
   currencySymbol,
+  selectedCoin,
 }: CoinChartProps) {
   const dispatch: AppDispatch = useDispatch();
-  const { selectedCoins, loading, hasError } = useAppSelector(
+  const { selectedCoins, hasError } = useAppSelector(
     (state) => state.selectedCoin
   );
+  const { data } = useAppSelector((state) => state.coinData);
   const days = useAppSelector((state) => state.timeline.currentTimeline.days);
   const [currentValue, setCurrentValue] = useState("");
   const [currentDate, setCurrentDate] = useState("");
@@ -46,10 +49,10 @@ export default function CoinChart({
       getCoinDataGraph({
         currency: currencyCode,
         days: days,
-        coinId: "bitcoin",
+        coinId: selectedCoin,
       })
     );
-  }, [dispatch, currencyCode, days]);
+  }, [dispatch, currencyCode, days, selectedCoin]);
 
   useEffect(() => {
     if (selectedCoins.length > 0) {
@@ -122,9 +125,24 @@ export default function CoinChart({
               {coin?.id && "Volume 24h"}
             </span>
           ) : (
-            <span className="text-base leading-5 sm:text-xl font-normal dark:text-[#D1D1D1] text-[#191932] sm:leading-6 capitalize">
-              {coin?.id}
-            </span>
+            <>
+              <span className="text-base leading-5 sm:text-xl font-normal dark:text-[#D1D1D1] text-[#191932] sm:leading-6 capitalize">
+                {data.map((c) => {
+                  if (c.id === coin?.id) {
+                    return c.name;
+                  }
+                })}
+              </span>
+              <span className="ml-1 text-base leading-5 sm:text-xl font-normal dark:text-[#D1D1D1] text-[#191932] sm:leading-6 uppercase">
+                (
+                {data.map((c) => {
+                  if (c.id === coin?.id) {
+                    return c.symbol;
+                  }
+                })}
+                )
+              </span>
+            </>
           )}
         </div>
         <span className="text-xl sm:text-[28px] font-medium sm:font-bold leading-7 mt-3 sm:mt-6">
