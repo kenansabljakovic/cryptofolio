@@ -2,7 +2,7 @@
 import CoinChart from "./CoinChart";
 import { useAppSelector } from "../../redux/store";
 
-export default function GraphCoins() {
+export default function GraphCoins({ selectedCoin }: { selectedCoin: string }) {
   const currencyCode = useAppSelector(
     (state) => state.currency.currentCurrency.code
   );
@@ -15,11 +15,13 @@ export default function GraphCoins() {
         chartType="price"
         currencyCode={currencyCode}
         currencySymbol={currencySimbol}
+        selectedCoin={selectedCoin}
       />
       <CoinChart
         chartType="volume"
         currencyCode={currencyCode}
         currencySymbol={currencySimbol}
+        selectedCoin={selectedCoin}
       />
     </div>
   );
