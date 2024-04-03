@@ -127,20 +127,10 @@ export default function CoinChart({
           ) : (
             <>
               <span className="text-base leading-5 sm:text-xl font-normal dark:text-[#D1D1D1] text-[#191932] sm:leading-6 capitalize">
-                {data.map((c) => {
-                  if (c.id === coin?.id) {
-                    return c.name;
-                  }
-                })}
+                {data.find((c) => c.id === coin?.id)?.name}
               </span>
               <span className="ml-1 text-base leading-5 sm:text-xl font-normal dark:text-[#D1D1D1] text-[#191932] sm:leading-6 uppercase">
-                (
-                {data.map((c) => {
-                  if (c.id === coin?.id) {
-                    return c.symbol;
-                  }
-                })}
-                )
+                ({data.find((c) => c.id === coin?.id)?.symbol})
               </span>
             </>
           )}
