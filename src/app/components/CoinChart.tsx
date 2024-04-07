@@ -116,7 +116,7 @@ export default function CoinChart({
     <div
       className={`w-full flex flex-col ${
         chartType === "volume" ? "dark:bg-[#1E1932]" : "dark:bg-[#191932]"
-      } bg-white rounded-xl pt-4 lg:pt-6 pb-1 lg:pb-2 px-4 lg:px-6`}
+      } bg-white rounded-xl pt-4 lg:pt-6 pb-1 lg:pb-3 px-4 lg:px-6`}
     >
       <div className="flex flex-col">
         <div>
@@ -157,6 +157,8 @@ export default function CoinChart({
               axisLine={false}
               tickLine={false}
               tickFormatter={(tick) => formatDateGraphs(tick, days)}
+              interval="preserveStartEnd"
+              tickMargin={5}
             />
             <Tooltip content={<></>} />
             <Bar dataKey="volume" stroke="" fill="url(#colorBarChart)" />
@@ -182,6 +184,8 @@ export default function CoinChart({
               axisLine={false}
               tickLine={false}
               tickFormatter={(tick) => formatDateGraphs(tick, days)}
+              interval="preserveStartEnd"
+              tickMargin={5}
             />
 
             <Tooltip content={<></>} />
