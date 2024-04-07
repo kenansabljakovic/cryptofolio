@@ -60,7 +60,9 @@ export default function CoinsMarketStats({
                 {coin.name}
               </span>
               <span className="lg:ml-1 dark:text-white text-[#232336] text-sm leading-5 sm:text-base font-medium sm:leading-6 uppercase">
+                <span className="hidden lg:inline sm:ml-1">(</span>
                 {coin.symbol}
+                <span className="hidden lg:inline">)</span>
               </span>
             </div>
           </div>
