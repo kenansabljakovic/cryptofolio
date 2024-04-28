@@ -16,13 +16,13 @@ type CoinData = {
 
 type selectedCoinState = {
   selectedCoins: CoinData[];
-  loading: string;
+  loading: boolean;
   hasError: boolean;
 };
 
 const initialState: selectedCoinState = {
   selectedCoins: [],
-  loading: "idle",
+  loading: false,
   hasError: false,
 };
 
@@ -60,15 +60,15 @@ const selectedCoinsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getCoinDataGraph.pending, (state) => {
-        state.loading = "pending";
+        state.loading = true;
         state.hasError = false;
       })
       .addCase(getCoinDataGraph.fulfilled, (state, action) => {
         state.selectedCoins = [action.payload];
-        state.loading = "fulfilled";
+        state.loading = false;
       })
       .addCase(getCoinDataGraph.rejected, (state, action) => {
-        state.loading = "rejected";
+        state.loading = false;
         state.hasError = true;
         console.error("API call failed with error:", action.payload);
       });
