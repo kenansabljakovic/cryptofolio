@@ -10,6 +10,7 @@ import { BitcoinIcon } from "../icons/BitcoinIcon";
 import { EthereumIcon } from "../icons/EthereumIcon";
 import { ChevronDownIcon } from "../icons/ChevronDownIcon";
 import { Progress } from "../components/ui/progress";
+import MarketDataHeaderSkeleton from "./MarketDataHeaderSkeleton";
 import formatNumber from "../../app/utils/formatNumber";
 import getPercentage from "../../app/utils/getPercentage";
 
@@ -25,6 +26,10 @@ export default function MarketDataHeader() {
   useEffect(() => {
     dispatch(getGlobalData());
   }, [dispatch, code]);
+
+  if (isLoading || data.active_cryptocurrencies === 0) {
+    return <MarketDataHeaderSkeleton />;
+  }
 
   const hasData: boolean = !isLoading && !hasError;
   const percentageVolumeBasedOnTotalMarketCap = getPercentage(
