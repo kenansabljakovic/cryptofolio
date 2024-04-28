@@ -15,6 +15,8 @@ import { AppDispatch, useAppSelector } from "../../redux/store";
 import { getCoinDataGraph } from "../../redux/features/selectedCoinSlice";
 import formatNumber from "../utils/formatNumber";
 import formatDateGraphs from "../utils/formatDateGraph";
+import PriceChartSkeleton from "./PriceChartSkeleton";
+import VolumeChartSkeleton from "./VolumeChartSkeleton";
 
 type Payload = {
   date: string;
@@ -36,7 +38,7 @@ export default function CoinChart({
   selectedCoin,
 }: CoinChartProps) {
   const dispatch: AppDispatch = useDispatch();
-  const { selectedCoins, hasError } = useAppSelector(
+  const { selectedCoins, loading, hasError } = useAppSelector(
     (state) => state.selectedCoin
   );
   const { data } = useAppSelector((state) => state.coinData);
@@ -76,6 +78,18 @@ export default function CoinChart({
       setCurrentDate(lastDate);
     }
   }, [selectedCoins, chartType, currencyCode]);
+
+  if (loading || selectedCoins.length === 0 || data.length === 0) {
+    return (
+      <div className="w-full flex flex-wrap md:flex-nowrap gap-4 lg:gap-8">
+        {chartType === "price" ? (
+          <PriceChartSkeleton />
+        ) : (
+          <VolumeChartSkeleton />
+        )}
+      </div>
+    );
+  }
 
   if (hasError) {
     return <div>Error fetching data</div>;
