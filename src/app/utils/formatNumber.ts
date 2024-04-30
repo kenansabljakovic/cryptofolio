@@ -1,4 +1,7 @@
-const formatNumber = (number: number) => {
+const formatNumber = (number: number | null | undefined) => {
+  if (number === null || number === undefined) {
+    return "N/A";
+  }
   let unit = "";
   let formattedNumber = 0;
 

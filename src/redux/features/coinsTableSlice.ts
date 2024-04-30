@@ -80,7 +80,12 @@ export const getCoinMarketData = createAsyncThunk(
 const coinsTableData = createSlice({
   name: "coinsTable",
   initialState,
-  reducers: {},
+  reducers: {
+    resetCoinsData: (state) => {
+      state.coins = [];
+      state.currentPage = 1;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getCoinMarketData.pending, (state) => {
@@ -88,10 +93,9 @@ const coinsTableData = createSlice({
         state.hasError = false;
       })
       .addCase(getCoinMarketData.fulfilled, (state, action) => {
-        state.coins = action.payload;
+        state.coins = [...state.coins, ...action.payload];
         state.loading = "fulfilled";
-        //In the next PR i will implement infinite scroll
-        //state.currentPage += 1;
+        state.currentPage += 1;
       })
       .addCase(getCoinMarketData.rejected, (state, action) => {
         state.loading = "rejected";
@@ -101,4 +105,5 @@ const coinsTableData = createSlice({
   },
 });
 
+export const { resetCoinsData } = coinsTableData.actions;
 export default coinsTableData.reducer;
