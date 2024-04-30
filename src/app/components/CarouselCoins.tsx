@@ -15,6 +15,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "../components/ui/carousel";
+import CarouselCoinsSkeleton from "./CarouselCoinsSkeleton";
 
 type CarouselCoinsProps = {
   clickedCoin: (value: string) => void;
@@ -41,7 +42,7 @@ export default function CarouselCoins({
     dispatch(getCoinData(currencyCode));
   }, [dispatch, currencyCode]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading || data.length === 0) return <CarouselCoinsSkeleton />;
   if (hasError) return <div>Error loading the data.</div>;
 
   const handleCarousel = (coin: string) => {
