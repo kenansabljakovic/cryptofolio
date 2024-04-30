@@ -1,9 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch } from "react-redux";
 import { AppDispatch, useAppSelector } from "../../redux/store";
-import { getCoinMarketData } from "../../redux/features/coinsTableSlice";
+import {
+  getCoinMarketData,
+  resetCoinsData,
+} from "../../redux/features/coinsTableSlice";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "./ui/table";
 import CoinsMarketStats from "./CoinsMarketStats";
 
@@ -18,22 +21,28 @@ export default function TableCoins() {
     (state) => state.currency.currentCurrency.code
   );
 
-  /* useEffect(() => {
-    if (coins.length === 0 && loading !== "pending") {
-      // Checks if there are no coins and nothing is currently loading
+  const resetTrigger = useAppSelector((state) => state.currency.resetTrigger);
+
+  useEffect(() => {
+    if (resetTrigger > 0) {
+      dispatch(resetCoinsData());
       dispatch(
-        getCoinMarketData({ currency: currencyCode, page: currentPage })
+        getCoinMarketData({
+          currency: currencyCode,
+          page: 1,
+        })
       );
     }
-  }, [dispatch, currencyCode]); */
-  //When I use useEffect it fetches 1st page two times, also currency dropdown selector doesn't work.
-  //When i try to change to different currency from the dropdown currency menu it doesn't fetch data for the selected currency.
+  }, [resetTrigger, dispatch]);
 
   const fetchMoreData = () => {
     if (loading) {
       if (coins.length < 300) {
         dispatch(
-          getCoinMarketData({ currency: currencyCode, page: currentPage })
+          getCoinMarketData({
+            currency: currencyCode,
+            page: currentPage,
+          })
         );
       } else {
         setHasMore(false);
