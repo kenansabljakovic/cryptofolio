@@ -3,8 +3,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 type GetCoinMarketDataArgs = {
-  currency?: string;
-  page?: number;
+  currency: string;
+  page: number;
 };
 
 type Coin = {
@@ -80,7 +80,12 @@ export const getCoinMarketData = createAsyncThunk(
 const coinsTableData = createSlice({
   name: "coinsTable",
   initialState,
-  reducers: {},
+  reducers: {
+    resetCoinsData: (state) => {
+      state.coins = [];
+      state.currentPage = 1;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getCoinMarketData.pending, (state) => {
@@ -88,11 +93,7 @@ const coinsTableData = createSlice({
         state.hasError = false;
       })
       .addCase(getCoinMarketData.fulfilled, (state, action) => {
-        if (state.currentPage === 1) {
-          state.coins = action.payload;
-        } else {
-          state.coins = [...state.coins, ...action.payload];
-        }
+        state.coins = [...state.coins, ...action.payload];
         state.loading = "fulfilled";
         state.currentPage += 1;
       })
@@ -104,4 +105,5 @@ const coinsTableData = createSlice({
   },
 });
 
+export const { resetCoinsData } = coinsTableData.actions;
 export default coinsTableData.reducer;
