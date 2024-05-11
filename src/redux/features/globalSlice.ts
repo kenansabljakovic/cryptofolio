@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-console.log(process.env);
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
 type InitialState = {
   data: GlobalData;
   isLoading: boolean;
