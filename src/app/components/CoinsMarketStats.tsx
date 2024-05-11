@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { useAppSelector } from "../../redux/store";
 import { ChevronUpIcon } from "../icons/ChevronUpIcon";
 import { ChevronDownIcon } from "../icons/ChevronDownIcon";
@@ -42,6 +43,7 @@ export default function CoinsMarketStats({
   return (
     <>
       <tr className="bg-transparent h-2"></tr>
+
       <TableRow className="dark:bg-[#191925] bg-white border-0">
         <TableCell className="hidden lg:table-cell dark:text-white text-[#232336] text-base font-medium leading-6 rounded-tl-xl rounded-bl-xl">
           {index + 1}
@@ -55,16 +57,18 @@ export default function CoinsMarketStats({
               width={32}
               height={32}
             />
-            <div>
-              <span className="hidden lg:inline dark:text-white text-[#232336] lg:text-base lg:font-medium lg:leading-6">
-                {coin.name}
-              </span>
-              <span className="lg:ml-1 dark:text-white text-[#232336] text-sm leading-5 sm:text-base font-medium sm:leading-6 uppercase">
-                <span className="hidden lg:inline sm:ml-1">(</span>
-                {coin.symbol}
-                <span className="hidden lg:inline">)</span>
-              </span>
-            </div>
+            <Link href={`/coin/${coin.id}`}>
+              <div>
+                <span className="hidden lg:inline dark:text-white text-[#232336] lg:text-base lg:font-medium lg:leading-6">
+                  {coin.name}
+                </span>
+                <span className="lg:ml-1 dark:text-white text-[#232336] text-sm leading-5 sm:text-base font-medium sm:leading-6 uppercase">
+                  <span className="hidden lg:inline sm:ml-1">(</span>
+                  {coin.symbol}
+                  <span className="hidden lg:inline">)</span>
+                </span>
+              </div>
+            </Link>
           </div>
         </TableCell>
         <TableCell className="dark:text-white text-[#232336] leading-5 text-sm sm:text-base font-medium sm:leading-6">
