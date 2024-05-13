@@ -9,6 +9,7 @@ type InitialState = {
 type GetCoinPageDataArgs = {
   coin: string;
 };
+
 type Coin = {
   [key: string]: number;
 };

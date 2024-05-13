@@ -2,10 +2,7 @@ import React from "react";
 import { Snippet } from "@nextui-org/react";
 
 const HomepageLinks = ({ link }: { link: string }) => {
-  if (!link) return null;
-
   const formattedLink = link.replace(/^https?:\/\//, "").replace(/\/$/, "");
-
   return (
     <Snippet
       className="dark:bg-[rgb(30,25,50)] bg-white px-0 py-0"
