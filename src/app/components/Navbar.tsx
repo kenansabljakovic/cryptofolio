@@ -5,6 +5,7 @@ import { CryptofolioLogoIcon } from "../icons/CryptofolioLogoIcon";
 import { HomeIcon } from "../icons/HomeIcon";
 import { PortfolioGreyIcon } from "../icons/PortfolioGreyIcon";
 import { Input } from "../../app/components/ui/input";
+import Link from "next/link";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,10 +30,11 @@ export default function Navbar() {
             <div className="bg-[rgb(120,120,250,0.7)] border border-[#7878FA] rounded-md p-1.5 sm:bg-transparent sm:border-none">
               <HomeIcon className="h-5 w-5 sm:h-6 sm:w-6" />
             </div>
-
-            <span className="hidden sm:inline dark:text-white text-[#353570] md:text-sm lg:text-base font-medium">
-              Home
-            </span>
+            <Link href="/">
+              <span className="hidden sm:inline dark:text-white text-[#353570] md:text-sm lg:text-base font-medium">
+                Home
+              </span>
+            </Link>
           </div>
           <div className="dark:bg-[#232336] rounded-md bg-[#CCCCFA] bg-opacity-40 sm:dark:bg-transparent sm:bg-transparent px-3 sm:px-0 flex items-center gap-[10px]">
             <PortfolioGreyIcon />
