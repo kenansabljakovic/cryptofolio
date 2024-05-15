@@ -16,6 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "../components/ui/popover";
+import { ScrollArea } from "../components/ui/scroll-area";
 import { updateCurrency } from "../../redux/features/currencySlice";
 import { AppDispatch, useAppSelector } from "../../redux/store";
 
@@ -48,23 +49,26 @@ export default function DropDownCurrencies() {
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
+
       <PopoverContent className="w-[108px] p-0">
         <Command>
           <CommandInput placeholder="Search..." />
           <CommandEmpty>No currency found.</CommandEmpty>
-          <CommandGroup>
-            {currencies.map((currency) => (
-              <CommandItem
-                key={currency.code}
-                onSelect={() => {
-                  dispatch(updateCurrency(currency));
-                  setOpen(false);
-                }}
-              >
-                {`${currency.symbol} ${currency.code.toUpperCase()}`}
-              </CommandItem>
-            ))}
-          </CommandGroup>
+          <ScrollArea className="max-h-[100px] overflow-auto">
+            <CommandGroup>
+              {currencies.map((currency) => (
+                <CommandItem
+                  key={currency.code}
+                  onSelect={() => {
+                    dispatch(updateCurrency(currency));
+                    setOpen(false);
+                  }}
+                >
+                  {`${currency.symbol} ${currency.code.toUpperCase()}`}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </ScrollArea>
         </Command>
       </PopoverContent>
     </Popover>
