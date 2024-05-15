@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { resetCoinsData } from "../../redux/features/coinsTableSlice";
 
 type Currency = {
   symbol: string;
@@ -29,6 +28,42 @@ const initialState: CurrencyState = {
     {
       symbol: "£",
       code: "gbp",
+    },
+    {
+      symbol: "C$",
+      code: "cad",
+    },
+    {
+      symbol: "₣",
+      code: "chf",
+    },
+    {
+      symbol: "A$",
+      code: "aud",
+    },
+    {
+      symbol: "₹",
+      code: "inr",
+    },
+    {
+      symbol: "¥",
+      code: "jpy",
+    },
+    {
+      symbol: "zł",
+      code: "pln",
+    },
+    {
+      symbol: "₿",
+      code: "btc",
+    },
+    {
+      symbol: "Ξ",
+      code: "eth",
+    },
+    {
+      symbol: "Ł",
+      code: "ltc",
     },
   ],
   resetTrigger: 0,
