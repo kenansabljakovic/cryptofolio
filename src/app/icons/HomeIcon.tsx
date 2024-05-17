@@ -1,6 +1,6 @@
-export const HomeIcon = ({ className }: { className: string }) => {
+export const HomeIcon = ({ isActive }: { isActive: boolean }) => {
   return (
-    <div className={className}>
+    <div className={`h-5 w-5 sm:h-6 sm:w-6 ${!isActive && "opacity-50"}`}>
       <svg
         viewBox="0 0 25 24"
         fill="none"
