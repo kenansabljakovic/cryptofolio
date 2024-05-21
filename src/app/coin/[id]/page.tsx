@@ -3,9 +3,10 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch, useAppSelector } from "../../../redux/store";
 import { getCoinPageData } from "../../../redux/features/coinPageSlice";
-import CoinPriceInfo from "@/app/components/CoinPriceInfo";
-import CoinDescriptionLinks from "@/app/components/CoinDescriptionLinks";
-import CoinMetrics from "@/app/components/CoinMetrics";
+import CoinPageSkeleton from "../../../app/components/CoinPageSkeleton";
+import CoinPriceInfo from "../../../app/components/CoinPriceInfo";
+import CoinDescriptionLinks from "../../../app/components/CoinDescriptionLinks";
+import CoinMetrics from "../../../app/components/CoinMetrics";
 
 type CoinPageProps = {
   params: {
@@ -30,7 +31,8 @@ export default function CoinPage({ params }: CoinPageProps) {
     dispatch(getCoinPageData({ coin: params.id }));
   }, [dispatch, params.id]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading || data.market_data.max_supply === 0)
+    return <CoinPageSkeleton />;
   if (hasError) return <div>Error loading the data.</div>;
 
   return (
