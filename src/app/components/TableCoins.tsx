@@ -1,7 +1,8 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch } from "react-redux";
+import { Spinner } from "@nextui-org/spinner";
 import { AppDispatch, useAppSelector } from "../../redux/store";
 import {
   getCoinMarketData,
@@ -59,7 +60,11 @@ export default function TableCoins() {
       dataLength={coins.length}
       next={fetchMoreData}
       hasMore={hasMore}
-      loader={<h4>Loading...</h4>}
+      loader={
+        <div className="mt-2 text-center">
+          <Spinner color="default" />
+        </div>
+      }
       endMessage={<p>You are all set! No more records to load.</p>}
     >
       <Table>
