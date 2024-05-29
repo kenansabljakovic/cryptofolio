@@ -9,6 +9,7 @@ import DropDownCurrencies from "./DropDownCurrencies";
 import { CryptofolioLogoIcon } from "../icons/CryptofolioLogoIcon";
 import { Input } from "../../app/components/ui/input";
 import StyledNavbarLink from "./StyledNavbarLink";
+import SearchResultsListSkeleton from "./SearchResultsListSkeleton";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,6 +37,7 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Cryptocurrency[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLUListElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -44,6 +46,7 @@ export default function Navbar() {
   useEffect(() => {
     if (searchQuery) {
       const fetchCryptocurrencies = async () => {
+        setIsLoading(true);
         try {
           const response = await fetch(
             `https://api.coingecko.com/api/v3/search?query=${searchQuery}&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`
@@ -52,6 +55,8 @@ export default function Navbar() {
           setSearchResults(data.coins);
         } catch (error) {
           console.error("Error fetching cryptocurrency data:", error);
+        } finally {
+          setIsLoading(false);
         }
       };
 
@@ -59,6 +64,7 @@ export default function Navbar() {
     } else {
       setSearchResults([]);
       setSelectedIndex(-1);
+      setIsLoading(false);
     }
   }, [searchQuery]);
 
@@ -169,32 +175,36 @@ export default function Navbar() {
                 ref={dropdownRef}
                 className="absolute bg-white dark:bg-[#191925] w-[149px] sm:w-[130px] md:w-[200px] lg:w-[286px] xl:w-[356px] border-l border-b border-r border-white border-opacity-10 rounded-b-md py-2 px-2 z-10"
               >
-                <ul ref={resultsRef}>
-                  {searchResults
-                    .map((coin, index) => (
-                      <li
-                        key={coin.id}
-                        className={`py-2 ${
-                          index === selectedIndex
-                            ? "bg-gray-200 dark:bg-gray-600 rounded-md"
-                            : ""
-                        }`}
-                      >
-                        <Link
-                          href={`/coin/${coin.id}`}
-                          className="flex items-center gap-4"
-                          onClick={() => handleCoinClick(coin.id)}
+                {isLoading ? (
+                  <SearchResultsListSkeleton />
+                ) : (
+                  <ul ref={resultsRef}>
+                    {searchResults
+                      .map((coin, index) => (
+                        <li
+                          key={coin.id}
+                          className={`py-2 ${
+                            index === selectedIndex
+                              ? "bg-gray-200 dark:bg-gray-600 rounded-md"
+                              : ""
+                          }`}
                         >
-                          <span
-                            className={`${inter.className} text-sm leading-[22px] pl-2`}
+                          <Link
+                            href={`/coin/${coin.id}`}
+                            className="flex items-center gap-4"
+                            onClick={() => handleCoinClick(coin.id)}
                           >
-                            {coin.name}
-                          </span>
-                        </Link>
-                      </li>
-                    ))
-                    .slice(0, 10)}
-                </ul>
+                            <span
+                              className={`${inter.className} text-sm leading-[22px] pl-2`}
+                            >
+                              {coin.name}
+                            </span>
+                          </Link>
+                        </li>
+                      ))
+                      .slice(0, 10)}
+                  </ul>
+                )}
               </div>
             )}
           </form>
