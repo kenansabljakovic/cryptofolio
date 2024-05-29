@@ -45,8 +45,8 @@ export default function Navbar() {
 
   useEffect(() => {
     if (searchQuery) {
+      setIsLoading(true);
       const fetchCryptocurrencies = async () => {
-        setIsLoading(true);
         try {
           const response = await fetch(
             `https://api.coingecko.com/api/v3/search?query=${searchQuery}&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`
