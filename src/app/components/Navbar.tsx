@@ -82,6 +82,7 @@ export default function Navbar() {
     setSelectedIndex(-1);
     if (inputRef.current) {
       inputRef.current.value = "";
+      inputRef.current.blur();
     }
     router.push(`/coin/${coinId}`);
   };
@@ -165,7 +166,7 @@ export default function Navbar() {
                 inter.className
               } transition-all sm:transition-none duration-300 ease-in-out ${
                 searchResults.length > 0 ? "rounded-b-none" : "rounded-b-md"
-              } w-[36px] h-[36px] sm:w-[130px] sm:h-10 md:h-11 md:w-[200px] lg:w-[286px] lg:h-12 xl:h-12 xl:w-[356px] focus:w-[149px] sm:focus:w-[130px] md:focus:w-[200px] lg:focus:w-[286px] xl:focus:w-[356px] placeholder-transparent sm:dark:placeholder:text-[#D1D1D1] sm:placeholder:text-[#424286] sm:placeholder:text-opacity-80 sm:placeholder:text-sm sm:placeholder:font-normal pl-12 text-lg`}
+              } w-[36px] h-[36px] sm:w-[130px] sm:h-10 md:h-11 md:w-[200px] lg:w-[286px] lg:h-12 xl:h-12 xl:w-[356px] focus:w-[149px] sm:focus:w-[130px] md:focus:w-[200px] lg:focus:w-[286px] xl:focus:w-[356px] placeholder-transparent sm:dark:placeholder:text-[#D1D1D1] sm:placeholder:text-[#424286] sm:placeholder:text-opacity-80 sm:placeholder:text-sm sm:placeholder:font-normal pl-12`}
               placeholder="Search..."
               onChange={(e) => handleSearch(e.target.value)}
               onKeyDown={handleKeyDown}
