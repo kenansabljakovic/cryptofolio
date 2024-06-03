@@ -10,12 +10,15 @@ import { CryptofolioLogoIcon } from "../icons/CryptofolioLogoIcon";
 import { Input } from "../../app/components/ui/input";
 import StyledNavbarLink from "./StyledNavbarLink";
 import SearchResultsListSkeleton from "./SearchResultsListSkeleton";
+import SearchResultsList from "./SearchResultsList";
 
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
   display: "swap",
 });
+
+const MAX_DISPLAYED_RESULTS = 10;
 
 type Cryptocurrency = {
   id: string;
@@ -87,16 +90,24 @@ export default function Navbar() {
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    const displayedResultsLength = Math.min(
+      searchResults.length,
+      MAX_DISPLAYED_RESULTS
+    );
+
     if (searchResults.length > 0) {
       if (e.key === "ArrowDown") {
+        e.preventDefault();
         setSelectedIndex((prevIndex) =>
-          prevIndex < searchResults.length - 1 ? prevIndex + 1 : 0
+          prevIndex < displayedResultsLength - 1 ? prevIndex + 1 : 0
         );
       } else if (e.key === "ArrowUp") {
+        e.preventDefault();
         setSelectedIndex((prevIndex) =>
-          prevIndex > 0 ? prevIndex - 1 : searchResults.length - 1
+          prevIndex > 0 ? prevIndex - 1 : displayedResultsLength - 1
         );
       } else if (e.key === "Enter" && selectedIndex >= 0) {
+        e.preventDefault();
         const selectedCoin = searchResults[selectedIndex];
         if (selectedCoin) {
           handleCoinClick(selectedCoin.id);
@@ -109,7 +120,7 @@ export default function Navbar() {
     if (
       resultsRef.current &&
       selectedIndex >= 0 &&
-      selectedIndex < searchResults.length
+      selectedIndex < Math.min(searchResults.length, MAX_DISPLAYED_RESULTS)
     ) {
       const selectedElement = resultsRef.current.children[
         selectedIndex
@@ -178,32 +189,11 @@ export default function Navbar() {
                 {isLoading ? (
                   <SearchResultsListSkeleton />
                 ) : (
-                  <ul ref={resultsRef}>
-                    {searchResults
-                      .map((coin, index) => (
-                        <li
-                          key={coin.id}
-                          className={`py-2 ${
-                            index === selectedIndex
-                              ? "bg-gray-200 dark:bg-gray-600 rounded-md"
-                              : ""
-                          }`}
-                        >
-                          <Link
-                            href={`/coin/${coin.id}`}
-                            className="flex items-center gap-4"
-                            onClick={() => handleCoinClick(coin.id)}
-                          >
-                            <span
-                              className={`${inter.className} text-sm leading-[22px] pl-2`}
-                            >
-                              {coin.name}
-                            </span>
-                          </Link>
-                        </li>
-                      ))
-                      .slice(0, 10)}
-                  </ul>
+                  <SearchResultsList
+                    results={searchResults.slice(0, MAX_DISPLAYED_RESULTS)}
+                    selectedIndex={selectedIndex}
+                    onCoinClick={handleCoinClick}
+                  />
                 )}
               </div>
             )}
