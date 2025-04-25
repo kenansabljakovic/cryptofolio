@@ -1,8 +1,6 @@
 "use client";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { AppDispatch, useAppSelector } from "../../redux/store";
-import { getGlobalData } from "../../redux/features/globalSlice";
+import { useAppSelector } from "../../redux/store";
+import { useGetGlobalDataQuery } from "../services/api";
 import { CoinsIcon } from "../icons/CoinsIcon";
 import { ExchangeIcon } from "../icons/ExchangeIcon";
 import { ChevronUpIcon } from "../icons/ChevronUpIcon";
@@ -15,23 +13,26 @@ import formatNumber from "../../app/utils/formatNumber";
 import getPercentage from "../../app/utils/getPercentage";
 
 export default function MarketDataHeader() {
-  const dispatch: AppDispatch = useDispatch();
-  const { data, isLoading, hasError } = useAppSelector(
-    (state) => state.globalData
-  );
-  const { symbol, code } = useAppSelector(
-    (state) => state.currency.currentCurrency
-  );
+  const { data: globalDataResponse, isLoading, error } = useGetGlobalDataQuery();
+const { symbol, code } = useAppSelector(
+  (state) => state.currency.currentCurrency
+);
 
-  useEffect(() => {
-    dispatch(getGlobalData());
-  }, [dispatch, code]);
+if (isLoading) {
+  return <MarketDataHeaderSkeleton />;
+}
 
-  if (isLoading || data.active_cryptocurrencies === 0) {
-    return <MarketDataHeaderSkeleton />;
-  }
+if (error) {
+  return <div>Error loading market data</div>;
+}
 
-  const hasData: boolean = !isLoading && !hasError;
+const data = globalDataResponse?.data;
+
+if (!data || data.active_cryptocurrencies === 0) {
+  return <MarketDataHeaderSkeleton />;
+}
+
+  const hasData: boolean = !isLoading && !error;
   const percentageVolumeBasedOnTotalMarketCap = getPercentage(
     data.total_volume.btc,
     data.total_market_cap.btc
