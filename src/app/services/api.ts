@@ -10,70 +10,105 @@ type GlobalData = {
 };
 
 type CoinMarketData = {
-    id: string;
-    symbol: string;
-    name: string;
-    image: string;
-    current_price: number;
-    price_change_percentage_24h: number;
-    market_cap: number;
-    market_cap_rank: number;
-    total_volume: number;
-    high_24h: number;
-    low_24h: number;
-    price_change_24h: number;
-    market_cap_change_24h: number;
-    market_cap_change_percentage_24h: number;
-    circulating_supply: number;
-    total_supply: number;
-    max_supply: number;
-    ath: number;
-    ath_change_percentage: number;
-    last_updated: string;
+  id: string;
+  symbol: string;
+  name: string;
+  image: string;
+  current_price: number;
+  price_change_percentage_24h: number;
+  market_cap: number;
+  market_cap_rank: number;
+  total_volume: number;
+  high_24h: number;
+  low_24h: number;
+  price_change_24h: number;
+  market_cap_change_24h: number;
+  market_cap_change_percentage_24h: number;
+  circulating_supply: number;
+  total_supply: number;
+  max_supply: number;
+  ath: number;
+  ath_change_percentage: number;
+  last_updated: string;
+  // Added these missing fields required by CoinsMarketStats
+  price_change_percentage_1h_in_currency: number;
+  price_change_percentage_24h_in_currency: number;
+  price_change_percentage_7d_in_currency: number;
+  sparkline_in_7d: {
+    price: number[];
   };
+};
 
-  type CoinChartData = {
-    id: string;
-    prices: [number, number][];
-    total_volumes: [number, number][];
-  };
+type CoinChartData = {
+  id: string;
+  prices: [number, number][];
+  total_volumes: [number, number][];
+};
 
-  type CoinDetails = {
-    id: string;
-    name: string;
-    symbol: string;
-  };
-  
+type CoinDetails = {
+  id: string;
+  name: string;
+  symbol: string;
+};
 
 export const cryptoApi = createApi({
   reducerPath: 'cryptoApi',
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://api.coingecko.com/api/v3',
   }),
+  tagTypes: ['CoinMarkets'],
   endpoints: (builder) => ({
     getGlobalData: builder.query<{ data: GlobalData }, void>({
       query: () => `/global?x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`,
     }),
     getCoinMarkets: builder.query<CoinMarketData[], string>({
-        query: (currency) => 
-          `/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=100&page=1&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`,
-      }),
-      getCoinMarketChart: builder.query<CoinChartData, { coinId: string; currency: string; days: string }>({
-        query: ({ coinId, currency, days }) => 
-          `/coins/${coinId}/market_chart?vs_currency=${currency}&days=${days}&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`,
-        transformResponse: (response: any, meta, arg) => {
-          return {
-            id: arg.coinId,
-            prices: response.prices,
-            total_volumes: response.total_volumes
-          };
+      query: (currency) => 
+        `/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=100&page=1&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`,
+    }),
+    getCoinMarketChart: builder.query<CoinChartData, { coinId: string; currency: string; days: string }>({
+      query: ({ coinId, currency, days }) => 
+        `/coins/${coinId}/market_chart?vs_currency=${currency}&days=${days}&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`,
+      transformResponse: (response: any, meta, arg) => {
+        return {
+          id: arg.coinId,
+          prices: response.prices,
+          total_volumes: response.total_volumes
+        };
+      }
+    }),
+    getCoinDetails: builder.query<CoinDetails, string>({
+      query: (coinId) => 
+        `/coins/${coinId}?localization=false&tickers=false&market_data=false&community_data=false&developer_data=false&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`,
+    }),
+    getCoinMarketPaginated: builder.query<CoinMarketData[], { currency: string; page: number }>({
+      query: ({ currency, page }) => 
+        `/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=20&page=${page}&sparkline=true&price_change_percentage=1h,24h,7d&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`,
+      // Group queries by currency only to consolidate pages
+      serializeQueryArgs: ({ queryArgs }) => queryArgs.currency,
+      // Force a re-fetch when the page number changes
+      forceRefetch: ({ currentArg, previousArg }) => {
+        // Only refetch if both args exist and the page number is different
+        return currentArg?.page !== previousArg?.page;
+      },
+      // Merge function to append new page results to existing data
+      merge: (currentCache, newItems, { arg }) => {
+        // If it's the first page, replace the cache
+        if (arg.page === 1) {
+          return newItems;
         }
-      }),
-      getCoinDetails: builder.query<CoinDetails, string>({
-        query: (coinId) => 
-          `/coins/${coinId}?localization=false&tickers=false&market_data=false&community_data=false&developer_data=false&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`,
-      }),
+        // Otherwise append new items to the cache
+        return [...currentCache, ...newItems];
+      },
+      // This tags the data for future invalidation if needed
+      providesTags: ['CoinMarkets']
+    }),
   }),
 });
 
-export const { useGetGlobalDataQuery, useGetCoinMarketsQuery, useGetCoinMarketChartQuery, useGetCoinDetailsQuery } = cryptoApi;
+export const { 
+  useGetGlobalDataQuery, 
+  useGetCoinMarketsQuery, 
+  useGetCoinMarketChartQuery, 
+  useGetCoinDetailsQuery,
+  useGetCoinMarketPaginatedQuery
+} = cryptoApi;
