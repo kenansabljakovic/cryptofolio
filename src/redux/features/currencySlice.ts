@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type Currency = {
   symbol: string;
@@ -13,64 +13,64 @@ type CurrencyState = {
 
 const initialState: CurrencyState = {
   currentCurrency: {
-    symbol: "$",
-    code: "usd",
+    symbol: '$',
+    code: 'usd',
   },
   currencies: [
     {
-      symbol: "$",
-      code: "usd",
+      symbol: '$',
+      code: 'usd',
     },
     {
-      symbol: "€",
-      code: "eur",
+      symbol: '€',
+      code: 'eur',
     },
     {
-      symbol: "£",
-      code: "gbp",
+      symbol: '£',
+      code: 'gbp',
     },
     {
-      symbol: "C$",
-      code: "cad",
+      symbol: 'C$',
+      code: 'cad',
     },
     {
-      symbol: "₣",
-      code: "chf",
+      symbol: '₣',
+      code: 'chf',
     },
     {
-      symbol: "A$",
-      code: "aud",
+      symbol: 'A$',
+      code: 'aud',
     },
     {
-      symbol: "₹",
-      code: "inr",
+      symbol: '₹',
+      code: 'inr',
     },
     {
-      symbol: "¥",
-      code: "jpy",
+      symbol: '¥',
+      code: 'jpy',
     },
     {
-      symbol: "zł",
-      code: "pln",
+      symbol: 'zł',
+      code: 'pln',
     },
     {
-      symbol: "₿",
-      code: "btc",
+      symbol: '₿',
+      code: 'btc',
     },
     {
-      symbol: "Ξ",
-      code: "eth",
+      symbol: 'Ξ',
+      code: 'eth',
     },
     {
-      symbol: "Ł",
-      code: "ltc",
+      symbol: 'Ł',
+      code: 'ltc',
     },
   ],
   resetTrigger: 0,
 };
 
 export const currencySlice = createSlice({
-  name: "currency",
+  name: 'currency',
   initialState,
   reducers: {
     updateCurrency: (state, action: PayloadAction<Currency>) => {

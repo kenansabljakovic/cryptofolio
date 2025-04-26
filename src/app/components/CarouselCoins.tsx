@@ -1,36 +1,29 @@
-"use client";
-import * as React from "react";
-import Image from "next/image";
+'use client';
+import * as React from 'react';
+import Image from 'next/image';
 //import Autoplay from "embla-carousel-autoplay";
-import { useAppSelector } from "../../redux/store";
-import { useGetCoinMarketsQuery } from "../services/api";
-import { ChevronUpIcon } from "../icons/ChevronUpIcon";
-import { ChevronDownIcon } from "../icons/ChevronDownIcon";
+import { useAppSelector } from '../../redux/store';
+import { useGetCoinMarketsQuery } from '../services/api';
+import { ChevronUpIcon } from '../icons/ChevronUpIcon';
+import { ChevronDownIcon } from '../icons/ChevronDownIcon';
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "../components/ui/carousel";
-import CarouselCoinsSkeleton from "./CarouselCoinsSkeleton";
+} from '../components/ui/carousel';
+import CarouselCoinsSkeleton from './CarouselCoinsSkeleton';
 
 type CarouselCoinsProps = {
   clickedCoin: (value: string) => void;
   selectedCoin: string;
 };
 
-export default function CarouselCoins({
-  clickedCoin,
-  selectedCoin,
-}: CarouselCoinsProps) {
-  const currencyCode = useAppSelector(
-    (state) => state.currency.currentCurrency.code
-  );
+export default function CarouselCoins({ clickedCoin, selectedCoin }: CarouselCoinsProps) {
+  const currencyCode = useAppSelector((state) => state.currency.currentCurrency.code);
 
-  const currencySymbol = useAppSelector(
-    (state) => state.currency.currentCurrency.symbol
-  );
+  const currencySymbol = useAppSelector((state) => state.currency.currentCurrency.symbol);
 
   const { data, isLoading, error } = useGetCoinMarketsQuery(currencyCode);
 
@@ -40,11 +33,11 @@ export default function CarouselCoins({
   const handleCarousel = (coin: string) => {
     clickedCoin(coin);
   };
-  
+
   return (
     <Carousel
       opts={{
-        align: "start",
+        align: 'start',
       }}
       //Will see if I need this feature (carousel autoplay)
       /* plugins={[
@@ -60,60 +53,46 @@ export default function CarouselCoins({
           return (
             <CarouselItem
               key={coin.id}
-              className="pl-1 basis-1/4 sm:basis-1/2 sm:pl-2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+              className="basis-1/4 pl-1 sm:basis-1/2 sm:pl-2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
             >
               <button
                 onClick={() => handleCarousel(coin.id)}
                 className={`${
                   coinSelected
-                    ? "bg-[rgb(120,120,250,0.7)] border border-[#7878FA] shadow-md rounded-md"
-                    : "dark:bg-[#232336] sm:dark:bg-[#191925] bg-[rgb(255,255,255)]"
-                } px-2 py-2 w-full sm:h-[88px] sm:w-full flex items-center gap-1 sm:gap-4 rounded-lg cursor-pointer sm:px-4`}
+                    ? 'rounded-md border border-[#7878FA] bg-[rgb(120,120,250,0.7)] shadow-md'
+                    : 'bg-[rgb(255,255,255)] dark:bg-[#232336] sm:dark:bg-[#191925]'
+                } flex w-full cursor-pointer items-center gap-1 rounded-lg p-2 sm:h-[88px] sm:w-full sm:gap-4 sm:px-4`}
               >
                 <Image
-                  className="w-6 h-6 sm:w-8 sm:h-8"
+                  className="size-6 sm:size-8"
                   src={coin.image}
                   alt={coin.name}
                   width={32}
                   height={32}
                 />
 
-                <div className="flex sm:flex-col items-center sm:items-start gap-4 sm:gap-0">
-                  <div className="text-[16px] dark:text-white text-[#181825] font-medium leading-6 text-left">
-                    <span
-                      className={`${
-                        coinSelected && "text-white"
-                      } hidden sm:inline`}
-                    >
+                <div className="flex items-center gap-4 sm:flex-col sm:items-start sm:gap-0">
+                  <div className="text-left text-[16px] font-medium leading-6 text-[#181825] dark:text-white">
+                    <span className={`${coinSelected && 'text-white'} hidden sm:inline`}>
                       {coin.name}
                     </span>
-                    <span
-                      className={`hidden sm:inline sm:ml-1 ${
-                        coinSelected && "text-white"
-                      }`}
-                    >
+                    <span className={`hidden sm:ml-1 sm:inline ${coinSelected && 'text-white'}`}>
                       (
                     </span>
                     <span
                       className={`${
-                        coinSelected && "text-white"
-                      } uppercase text-sm font-medium sm:text-base`}
+                        coinSelected && 'text-white'
+                      } text-sm font-medium uppercase sm:text-base`}
                     >
                       {coin.symbol}
                     </span>
-                    <span
-                      className={`hidden sm:inline ${
-                        coinSelected && "text-white"
-                      }`}
-                    >
-                      )
-                    </span>
+                    <span className={`hidden sm:inline ${coinSelected && 'text-white'}`}>)</span>
                   </div>
                   <div className="hidden sm:flex sm:flex-row sm:items-center sm:gap-2">
                     <span
                       className={`${
-                        coinSelected && "text-white"
-                      } dark:text-[#D1D1D1] text-[#424286] text-sm font-normal leading-4`}
+                        coinSelected && 'text-white'
+                      } text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1]`}
                     >
                       {currencySymbol}
                       {coin.current_price}
@@ -128,9 +107,7 @@ export default function CarouselCoins({
                       </span>
                       <span
                         className={`text-sm font-normal ${
-                          coin.price_change_percentage_24h < 0
-                            ? "text-[#FD2263]"
-                            : "text-[#00F0E2]"
+                          coin.price_change_percentage_24h < 0 ? 'text-[#FD2263]' : 'text-[#00F0E2]'
                         }`}
                       >
                         {Math.abs(coin.price_change_percentage_24h).toFixed(2)}%
@@ -143,8 +120,8 @@ export default function CarouselCoins({
           );
         })}
       </CarouselContent>
-      <CarouselPrevious className="hidden dark:bg-[#6161D6] dark:bg-opacity-50 bg-[#6161D6] bg-opacity-50 dark:hover:bg-[#6161D6] hover:bg-[#6161D6] hover:bg-opacity-70" />
-      <CarouselNext className="hidden sm:inline-flex dark:bg-[#6161D6] dark:bg-opacity-50 bg-[#6161D6] bg-opacity-50 dark:hover:bg-[#6161D6] hover:bg-[#6161D6] hover:bg-opacity-70" />
+      <CarouselPrevious className="hidden bg-[#6161D6]/50 hover:bg-[#6161D6]/70 dark:bg-[#6161D6]/50 dark:hover:bg-[#6161D6]" />
+      <CarouselNext className="hidden bg-[#6161D6]/50 hover:bg-[#6161D6]/70 dark:bg-[#6161D6]/50 dark:hover:bg-[#6161D6] sm:inline-flex" />
     </Carousel>
   );
 }

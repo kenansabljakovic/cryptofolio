@@ -1,14 +1,11 @@
-import React from "react";
-import { Snippet } from "@nextui-org/react";
+import React from 'react';
+import { Snippet } from '@nextui-org/react';
 
 const HomepageLinks = ({ link }: { link: string }) => {
-  const formattedLink = link.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  const formattedLink = link.replace(/^https?:\/\//, '').replace(/\/$/, '');
   return (
-    <Snippet
-      className="dark:bg-[rgb(30,25,50)] bg-white px-0 py-0"
-      hideSymbol={true}
-    >
-      <span className="text-sm sm:text-base font-medium dark:text-white text-[#191932]">
+    <Snippet className="bg-white p-0 dark:bg-[rgb(30,25,50)]" hideSymbol={true}>
+      <span className="text-sm font-medium text-[#191932] dark:text-white sm:text-base">
         {formattedLink}
       </span>
     </Snippet>
