@@ -1,6 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -11,8 +10,8 @@ import {
   Area,
   YAxis,
 } from "recharts";
-import { AppDispatch, useAppSelector } from "../../redux/store";
-import { getCoinDataGraph } from "../../redux/features/selectedCoinSlice";
+import { useAppSelector } from "../../redux/store";
+import { useGetCoinMarketChartQuery, useGetCoinDetailsQuery } from "../services/api";
 import formatNumber from "../utils/formatNumber";
 import formatDateGraphs from "../utils/formatDateGraph";
 import PriceChartSkeleton from "./PriceChartSkeleton";
@@ -37,32 +36,32 @@ export default function CoinChart({
   currencySymbol,
   selectedCoin,
 }: CoinChartProps) {
-  const dispatch: AppDispatch = useDispatch();
-  const { selectedCoins, loading, hasError } = useAppSelector(
-    (state) => state.selectedCoin
-  );
-  const { data } = useAppSelector((state) => state.coinData);
   const days = useAppSelector((state) => state.timeline.currentTimeline.days);
   const [currentValue, setCurrentValue] = useState("");
   const [currentDate, setCurrentDate] = useState("");
 
-  useEffect(() => {
-    dispatch(
-      getCoinDataGraph({
-        currency: currencyCode,
-        days: days,
-        coinId: selectedCoin,
-      })
-    );
-  }, [dispatch, currencyCode, days, selectedCoin]);
+  // Create a wrapper function for formatDateGraphs to match Recharts' expected signature
+  const formatTick = (value: any) => formatDateGraphs(value, days);
+
+  // Use RTK Query hooks instead of dispatching actions
+  const { data: chartData, isLoading, error } = useGetCoinMarketChartQuery({
+    coinId: selectedCoin,
+    currency: currencyCode,
+    days: days
+  });
+
+  // Get coin details (only for price charts)
+  const { data: coinDetails } = useGetCoinDetailsQuery(selectedCoin, {
+    skip: chartType === "volume" // Skip this request for volume charts
+  });
 
   useEffect(() => {
-    if (selectedCoins.length > 0) {
+    if (chartData) {
       const lastDataPoint =
         chartType === "price"
-          ? selectedCoins[0].prices[selectedCoins[0].prices.length - 1]
-          : selectedCoins[0].total_volumes[
-              selectedCoins[0].total_volumes.length - 1
+          ? chartData.prices[chartData.prices.length - 1]
+          : chartData.total_volumes[
+              chartData.total_volumes.length - 1
             ];
       const lastValue = lastDataPoint[1];
       const lastDate = new Date(lastDataPoint[0]).toLocaleDateString(
@@ -77,9 +76,10 @@ export default function CoinChart({
       setCurrentValue(`${lastValue.toFixed(2)}`);
       setCurrentDate(lastDate);
     }
-  }, [selectedCoins, chartType, currencyCode]);
+  }, [chartData, chartType, currencyCode]);
 
-  if (loading || selectedCoins.length === 0 || data.length === 0) {
+  // Show loading state while data is being fetched
+  if (isLoading || !chartData || (chartType === "price" && !coinDetails)) {
     return (
       <div className="w-full flex flex-wrap md:flex-nowrap gap-4 lg:gap-8">
         {chartType === "price" ? (
@@ -91,11 +91,11 @@ export default function CoinChart({
     );
   }
 
-  if (hasError) {
+  if (error) {
     return <div>Error fetching data</div>;
   }
 
-  const coin = selectedCoins.length > 0 ? selectedCoins[0] : null;
+  const coin = chartData;
 
   const formattedData = coin
     ? chartType === "price"
@@ -141,10 +141,10 @@ export default function CoinChart({
           ) : (
             <>
               <span className="text-base leading-5 sm:text-xl font-normal dark:text-[#D1D1D1] text-[#191932] sm:leading-6 capitalize">
-                {data.find((c) => c.id === coin?.id)?.name}
+                {coinDetails?.name}
               </span>
               <span className="ml-1 text-base leading-5 sm:text-xl font-normal dark:text-[#D1D1D1] text-[#191932] sm:leading-6 uppercase">
-                ({data.find((c) => c.id === coin?.id)?.symbol})
+                ({coinDetails?.symbol})
               </span>
             </>
           )}
@@ -159,7 +159,10 @@ export default function CoinChart({
       </div>
       <ResponsiveContainer width="100%" height={266}>
         {chartType === "volume" ? (
-          <BarChart data={formattedData} onMouseMove={handleMouseMove}>
+          <BarChart 
+            data={formattedData} 
+            onMouseMove={handleMouseMove}
+          >
             <defs>
               <linearGradient id="colorBarChart" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="1%" stopColor="#B374F2" />
@@ -170,7 +173,7 @@ export default function CoinChart({
               dataKey="date"
               axisLine={false}
               tickLine={false}
-              tickFormatter={(tick) => formatDateGraphs(tick, days)}
+              tickFormatter={formatTick}
               interval="preserveStartEnd"
               tickMargin={5}
             />
@@ -178,31 +181,32 @@ export default function CoinChart({
             <Bar dataKey="volume" stroke="" fill="url(#colorBarChart)" />
           </BarChart>
         ) : (
-          <AreaChart data={formattedData} onMouseMove={handleMouseMove}>
+          <AreaChart 
+            data={formattedData} 
+            onMouseMove={handleMouseMove}
+          >
             <defs>
               <linearGradient id="colorAreaChart" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="1%" stopColor="#7474F2" stopOpacity={0.6} />
                 <stop offset="60%" stopColor="#7474F2" stopOpacity={0.1} />
               </linearGradient>
             </defs>
-
-            <Area
-              dataKey="value"
-              stroke="#7878FA"
-              strokeWidth="3"
-              fill="url(#colorAreaChart)"
-            />
-            <YAxis hide={true} domain={["dataMin", "dataMax"]} />
             <XAxis
               dataKey="date"
               axisLine={false}
               tickLine={false}
-              tickFormatter={(tick) => formatDateGraphs(tick, days)}
+              tickFormatter={formatTick}
               interval="preserveStartEnd"
               tickMargin={5}
             />
-
+            <YAxis hide={true} domain={["dataMin", "dataMax"]} />
             <Tooltip content={<></>} />
+            <Area
+              dataKey="value"
+              stroke="#7878FA"
+              strokeWidth={3}
+              fill="url(#colorAreaChart)"
+            />
           </AreaChart>
         )}
       </ResponsiveContainer>
