@@ -162,7 +162,7 @@ export default function CoinsMarketStats({
           />
         </TableCell>
         <TableCell className="hidden xl:table-cell dark:text-white text-[#232336] text-base font-medium leading-6 rounded-tr-xl rounded-br-xl">
-          <TableGraph sparklineIn7Days={coin.sparkline_in_7d.price} />
+          <TableGraph graphId={coin.id} sparklineIn7Days={coin.sparkline_in_7d.price} />
         </TableCell>
       </TableRow>
     </>

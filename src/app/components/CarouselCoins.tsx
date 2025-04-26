@@ -1,11 +1,9 @@
 "use client";
 import * as React from "react";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import Image from "next/image";
 //import Autoplay from "embla-carousel-autoplay";
-import { AppDispatch, useAppSelector } from "../../redux/store";
-import { getCoinData } from "../../redux/features/coinInfoSlice";
+import { useAppSelector } from "../../redux/store";
+import { useGetCoinMarketsQuery } from "../services/api";
 import { ChevronUpIcon } from "../icons/ChevronUpIcon";
 import { ChevronDownIcon } from "../icons/ChevronDownIcon";
 import {
@@ -26,10 +24,6 @@ export default function CarouselCoins({
   clickedCoin,
   selectedCoin,
 }: CarouselCoinsProps) {
-  const dispatch: AppDispatch = useDispatch();
-  const { data, isLoading, hasError } = useAppSelector(
-    (state) => state.coinData
-  );
   const currencyCode = useAppSelector(
     (state) => state.currency.currentCurrency.code
   );
@@ -38,16 +32,15 @@ export default function CarouselCoins({
     (state) => state.currency.currentCurrency.symbol
   );
 
-  useEffect(() => {
-    dispatch(getCoinData(currencyCode));
-  }, [dispatch, currencyCode]);
+  const { data, isLoading, error } = useGetCoinMarketsQuery(currencyCode);
 
-  if (isLoading || data.length === 0) return <CarouselCoinsSkeleton />;
-  if (hasError) return <div>Error loading the data.</div>;
+  if (isLoading || !data || data.length === 0) return <CarouselCoinsSkeleton />;
+  if (error) return <div>Error loading the data.</div>;
 
   const handleCarousel = (coin: string) => {
     clickedCoin(coin);
   };
+  
   return (
     <Carousel
       opts={{
