@@ -1,23 +1,7 @@
 import { PlusIcon } from "../icons/PlusIcon";
 import formatNumber from "../../app/utils/formatNumber";
 import { Progress } from "../components/ui/progress";
-
-type Coin = {
-  [key: string]: number;
-};
-
-type MarketData = {
-  total_volume: Coin;
-  max_supply: number;
-  circulating_supply: number;
-  market_cap: Coin;
-  fully_diluted_valuation: Coin;
-};
-
-type CoinInfo = {
-  symbol: string;
-  market_data: MarketData;
-};
+import { CoinInfo } from "../services/api"; // Corrected path
 
 type CoinMetricsProps = {
   data: CoinInfo;
@@ -111,23 +95,27 @@ export default function CoinMetrics({ data, currencyCode }: CoinMetricsProps) {
             <div className="flex items-center gap-[5px]">
               <span className="w-[6px] h-[6px] bg-[#D4770C] rounded-full"></span>
               <span className="text-[#D4770C]">
-                {Math.round(
-                  (data.market_data.circulating_supply /
-                    data.market_data.max_supply) *
-                    100
-                )}
+                {data.market_data.max_supply
+                  ? Math.round(
+                      (data.market_data.circulating_supply /
+                        data.market_data.max_supply) *
+                        100
+                    )
+                  : 0} 
                 %
               </span>
             </div>
             <div className="flex items-center gap-[5px]">
               <span className="w-[6px] h-[6px] bg-[#F8D2A6] rounded-full"></span>
               <span className="text-[#F8D2A6]">
-                {Math.round(
-                  100 -
-                    (data.market_data.circulating_supply /
-                      data.market_data.max_supply) *
-                      100
-                )}
+                {data.market_data.max_supply
+                  ? Math.round(
+                      100 -
+                        (data.market_data.circulating_supply /
+                          data.market_data.max_supply) *
+                          100
+                    )
+                  : 100} 
                 %
               </span>
             </div>
@@ -135,9 +123,11 @@ export default function CoinMetrics({ data, currencyCode }: CoinMetricsProps) {
           <Progress
             className="w-full h-[8px] bg-[#F8D2A6]"
             value={
-              (data.market_data.circulating_supply /
-                data.market_data.max_supply) *
-              100
+              data.market_data.max_supply
+                ? (data.market_data.circulating_supply /
+                    data.market_data.max_supply) *
+                  100
+                : 0
             }
             indicator="bg-[#D4770C]"
           />

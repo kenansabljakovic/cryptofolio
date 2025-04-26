@@ -1,10 +1,6 @@
 import convertToHyperlink from "../../app/utils/convertToHyperlink";
 import BlockchainLinks from "../../app/components/BlockChainLinks";
-
-type CoinInfo = {
-  description: { en: string };
-  links: { blockchain_site: string[] };
-};
+import { CoinInfo } from "../services/api";
 
 type CoinDescriptionLinksProps = {
   data: CoinInfo;
