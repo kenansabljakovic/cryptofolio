@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Spinner } from "@nextui-org/spinner";
 import { useAppSelector } from "../../redux/store";
@@ -17,19 +17,31 @@ export default function TableCoins() {
 
   const resetTrigger = useAppSelector((state) => state.currency.resetTrigger);
   
-  // Use RTK Query hook for fetching data
-  const { data: coins = [], isLoading, error, isFetching } = useGetCoinMarketPaginatedQuery({
-    currency: currencyCode,
-    page: page
-  });
+  // Track previous currency to detect changes
+  const prevCurrencyRef = useRef(currencyCode);
 
-  // Reset pagination when currency changes
+  // Use RTK Query hook for fetching data
+  // Skip the query on the very first render after a currency change while we are resetting the page to 1
+  const shouldSkip = prevCurrencyRef.current !== currencyCode && page !== 1;
+
+  const { data: coins = [], isLoading, error, isFetching } = useGetCoinMarketPaginatedQuery(
+    {
+      currency: currencyCode,
+      page: page,
+    },
+    {
+      skip: shouldSkip,
+    }
+  );
+
+  // When the currency actually changes, reset pagination and update the prev currency ref
   useEffect(() => {
-    if (resetTrigger > 0) {
+    if (prevCurrencyRef.current !== currencyCode) {
       setPage(1);
       setHasMore(true);
+      prevCurrencyRef.current = currencyCode;
     }
-  }, [resetTrigger]);
+  }, [currencyCode]);
 
   const fetchMoreData = () => {
     // Only fetch more if we're not already fetching and have more data to fetch
