@@ -1,12 +1,10 @@
-"use client";
+'use client';
 
-import { FiSun, FiMoon } from "react-icons/fi";
-
-import { useState, useEffect } from "react";
-import { useTheme } from "next-themes";
-import Image from "next/image";
-import { SunIcon } from "../icons/SunIcon";
-import { MoonIcon } from "../icons/MoonIcon";
+import { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
+import Image from 'next/image';
+import { SunIcon } from '../icons/SunIcon';
+import { MoonIcon } from '../icons/MoonIcon';
 
 export default function ThemeSwitch() {
   const [mounted, setMounted] = useState(false);
@@ -23,28 +21,28 @@ export default function ThemeSwitch() {
         alt="Loading Light/Dark Toggle"
         priority={false}
         title="Loading Light/Dark Toggle"
-        className="w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 lg:w-12 lg:h-12"
+        className="size-9 sm:size-10 md:size-11 lg:size-12"
       />
     );
 
-  if (resolvedTheme === "dark") {
+  if (resolvedTheme === 'dark') {
     return (
       <button
-        onClick={() => setTheme("light")}
-        className="dark:bg-[#191925] dark:opacity-100 bg-[#CCCCFA] bg-opacity-40 dark:border-slate-800 w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 lg:w-12 lg:h-12 flex items-center justify-center border border-white rounded-md cursor-pointer"
+        onClick={() => setTheme('light')}
+        className="flex size-9 cursor-pointer items-center justify-center rounded-md border border-white bg-[#CCCCFA]/40 dark:border-slate-800 dark:bg-[#191925] sm:size-10 md:size-11 lg:size-12"
       >
-        <SunIcon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
+        <SunIcon className="size-4 sm:size-5 lg:size-6" />
       </button>
     );
   }
 
-  if (resolvedTheme === "light") {
+  if (resolvedTheme === 'light') {
     return (
       <button
-        onClick={() => setTheme("dark")}
-        className="dark:bg-[#191925] dark:opacity-100 bg-[#CCCCFA] opacity-40 w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 lg:w-12 lg:h-12 flex items-center justify-center rounded-md cursor-pointer"
+        onClick={() => setTheme('dark')}
+        className="flex size-9 cursor-pointer items-center justify-center rounded-md bg-[#CCCCFA]/40 dark:bg-[#191925] sm:size-10 md:size-11 lg:size-12"
       >
-        <MoonIcon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
+        <MoonIcon className="size-4 sm:size-5 lg:size-6" />
       </button>
     );
   }

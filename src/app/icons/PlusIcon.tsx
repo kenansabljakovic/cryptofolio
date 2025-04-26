@@ -1,7 +1,7 @@
 export const PlusIcon = () => {
   return (
     <svg
-      className="rounded-full bg-[#6161D6] border border-[#7878FA] flex items-center justify-center w-6 h-6"
+      className="flex size-6 items-center justify-center rounded-full border border-[#7878FA] bg-[#6161D6]"
       width="16"
       height="16"
       viewBox="0 0 16 16"

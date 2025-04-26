@@ -1,5 +1,5 @@
-"use client";
-import { ResponsiveContainer, AreaChart, Area, YAxis } from "recharts";
+'use client';
+import { ResponsiveContainer, AreaChart, Area, YAxis } from 'recharts';
 
 type TableGraphProps = {
   sparklineIn7Days: number[];
@@ -20,7 +20,7 @@ export default function TableGraph({ sparklineIn7Days, graphId }: TableGraphProp
             <stop offset="95%" stopColor="#7474F2" stopOpacity={0.1} />
           </linearGradient>
         </defs>
-        <YAxis hide={true} domain={["dataMin", "dataMax"]} />
+        <YAxis hide={true} domain={['dataMin', 'dataMax']} />
         <Area
           type="monotone"
           dataKey="price"

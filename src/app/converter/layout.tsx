@@ -1,5 +1,5 @@
-import React from "react";
-import NavHome from "../components/NavHome";
+import React from 'react';
+import NavHome from '../components/NavHome';
 
 type ConverterLayoutProps = {
   children: React.ReactNode;

@@ -1,27 +1,27 @@
 const formatNumber = (number: number | null | undefined) => {
   if (number === null || number === undefined) {
-    return "N/A";
+    return 'N/A';
   }
-  let unit = "";
+  let unit = '';
   let formattedNumber = 0;
 
   if (number < 1e3) {
-    unit = "";
+    unit = '';
     formattedNumber = number;
   } else if (number < 1e6) {
-    unit = "K";
+    unit = 'K';
     formattedNumber = number / 1e3;
   } else if (number < 1e9) {
-    unit = "M";
+    unit = 'M';
     formattedNumber = number / 1e6;
   } else if (number < 1e12) {
-    unit = "B";
+    unit = 'B';
     formattedNumber = number / 1e9;
   } else if (number < 1e15) {
-    unit = "T";
+    unit = 'T';
     formattedNumber = number / 1e12;
   } else if (number < 1e18) {
-    unit = "Q";
+    unit = 'Q';
     formattedNumber = number / 1e15;
   } //
 
