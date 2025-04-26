@@ -2,31 +2,7 @@ import Image from "next/image";
 import HomepageLinks from "./HomePageLinks";
 import { ChevronUpIcon } from "../icons/ChevronUpIcon";
 import { ChevronDownIcon } from "../icons/ChevronDownIcon";
-
-type Coin = {
-  [key: string]: number;
-};
-
-type TimeStamp = {
-  [key: string]: string;
-};
-
-type MarketData = {
-  current_price: Coin;
-  price_change_percentage_24h_in_currency: Coin;
-  ath: Coin;
-  ath_date: TimeStamp;
-  atl: Coin;
-  atl_date: TimeStamp;
-};
-
-type CoinInfo = {
-  symbol: string;
-  name: string;
-  image: { [name: string]: string };
-  links: { homepage: string[] };
-  market_data: MarketData;
-};
+import { CoinInfo } from "../services/api";
 
 type CoinPriceInfoProps = {
   data: CoinInfo;
