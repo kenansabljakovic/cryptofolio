@@ -16,7 +16,9 @@ export default function Home() {
         <CarouselCoins clickedCoin={setSelectedCoin} selectedCoin={selectedCoin} />
       </div>
       <div className="mx-auto mt-4 max-w-[1440px] px-6 sm:mt-10 sm:px-[42px] xl:px-[72px]">
-        <GraphCoins selectedCoin={selectedCoin} />
+        <Suspense fallback={null}>
+          <GraphCoins selectedCoin={selectedCoin} />
+        </Suspense>
       </div>
       <div className="mx-auto mt-4 max-w-[1440px] px-6 sm:mt-10 sm:px-[42px] xl:px-[72px]">
         <Suspense fallback={null}>
