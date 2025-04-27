@@ -1,5 +1,5 @@
-"use client";
-import { useState, useEffect } from "react";
+'use client';
+import { useState, useEffect } from 'react';
 import {
   BarChart,
   Bar,
@@ -9,13 +9,13 @@ import {
   AreaChart,
   Area,
   YAxis,
-} from "recharts";
-import { useAppSelector } from "../../redux/store";
-import { useGetCoinMarketChartQuery, useGetCoinDetailsQuery } from "../services/api";
-import formatNumber from "../utils/formatNumber";
-import formatDateGraphs from "../utils/formatDateGraph";
-import PriceChartSkeleton from "./PriceChartSkeleton";
-import VolumeChartSkeleton from "./VolumeChartSkeleton";
+} from 'recharts';
+import { useAppSelector } from '../../redux/store';
+import { useGetCoinMarketChartQuery, useGetCoinDetailsQuery } from '../services/api';
+import formatNumber from '../utils/formatNumber';
+import formatDateGraphs from '../utils/formatDateGraph';
+import PriceChartSkeleton from './PriceChartSkeleton';
+import VolumeChartSkeleton from './VolumeChartSkeleton';
 
 type Payload = {
   date: string;
@@ -24,7 +24,7 @@ type Payload = {
 };
 
 type CoinChartProps = {
-  chartType: "price" | "volume";
+  chartType: 'price' | 'volume';
   currencyCode: string;
   currencySymbol?: string;
   selectedCoin: string;
@@ -37,41 +37,40 @@ export default function CoinChart({
   selectedCoin,
 }: CoinChartProps) {
   const days = useAppSelector((state) => state.timeline.currentTimeline.days);
-  const [currentValue, setCurrentValue] = useState("");
-  const [currentDate, setCurrentDate] = useState("");
+  const [currentValue, setCurrentValue] = useState('');
+  const [currentDate, setCurrentDate] = useState('');
 
   // Create a wrapper function for formatDateGraphs to match Recharts' expected signature
-  const formatTick = (value: any) => formatDateGraphs(value, days);
+  const formatTick = (value: string) => formatDateGraphs(value, days);
 
   // Use RTK Query hooks instead of dispatching actions
-  const { data: chartData, isLoading, error } = useGetCoinMarketChartQuery({
+  const {
+    data: chartData,
+    isLoading,
+    error,
+  } = useGetCoinMarketChartQuery({
     coinId: selectedCoin,
     currency: currencyCode,
-    days: days
+    days: days,
   });
 
   // Get coin details (only for price charts)
   const { data: coinDetails } = useGetCoinDetailsQuery(selectedCoin, {
-    skip: chartType === "volume" // Skip this request for volume charts
+    skip: chartType === 'volume', // Skip this request for volume charts
   });
 
   useEffect(() => {
     if (chartData) {
       const lastDataPoint =
-        chartType === "price"
+        chartType === 'price'
           ? chartData.prices[chartData.prices.length - 1]
-          : chartData.total_volumes[
-              chartData.total_volumes.length - 1
-            ];
+          : chartData.total_volumes[chartData.total_volumes.length - 1];
       const lastValue = lastDataPoint[1];
-      const lastDate = new Date(lastDataPoint[0]).toLocaleDateString(
-        undefined,
-        {
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-        }
-      );
+      const lastDate = new Date(lastDataPoint[0]).toLocaleDateString(undefined, {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      });
 
       setCurrentValue(`${lastValue.toFixed(2)}`);
       setCurrentDate(lastDate);
@@ -79,14 +78,10 @@ export default function CoinChart({
   }, [chartData, chartType, currencyCode]);
 
   // Show loading state while data is being fetched
-  if (isLoading || !chartData || (chartType === "price" && !coinDetails)) {
+  if (isLoading || !chartData || (chartType === 'price' && !coinDetails)) {
     return (
-      <div className="w-full flex flex-wrap md:flex-nowrap gap-4 lg:gap-8">
-        {chartType === "price" ? (
-          <PriceChartSkeleton />
-        ) : (
-          <VolumeChartSkeleton />
-        )}
+      <div className="flex w-full flex-wrap gap-4 md:flex-nowrap lg:gap-8">
+        {chartType === 'price' ? <PriceChartSkeleton /> : <VolumeChartSkeleton />}
       </div>
     );
   }
@@ -98,7 +93,7 @@ export default function CoinChart({
   const coin = chartData;
 
   const formattedData = coin
-    ? chartType === "price"
+    ? chartType === 'price'
       ? coin.prices.map(([time, value]) => ({
           date: new Date(time),
           value,
@@ -112,15 +107,15 @@ export default function CoinChart({
   const handleMouseMove = (e: { activePayload?: { payload: Payload }[] }) => {
     if (e.activePayload && e.activePayload.length > 0) {
       const { payload } = e.activePayload[0];
-      const dataKey = chartType === "price" ? "value" : "volume";
-      const value = payload[dataKey]?.toFixed(2) ?? "0";
+      const dataKey = chartType === 'price' ? 'value' : 'volume';
+      const value = payload[dataKey]?.toFixed(2) ?? '0';
       const date = new Date(payload.date);
       setCurrentValue(value);
       setCurrentDate(
         date.toLocaleDateString(undefined, {
-          month: "long",
-          day: "numeric",
-          year: "numeric",
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
         })
       );
     }
@@ -128,41 +123,37 @@ export default function CoinChart({
 
   return (
     <div
-      className={`w-full flex flex-col ${
-        chartType === "volume" ? "dark:bg-[#1E1932]" : "dark:bg-[#191932]"
-      } bg-white rounded-xl pt-4 lg:pt-6 pb-1 lg:pb-3 px-4 lg:px-6`}
+      className={`flex w-full flex-col ${
+        chartType === 'volume' ? 'dark:bg-[#1E1932]' : 'dark:bg-[#191932]'
+      } rounded-xl bg-white px-4 pb-1 pt-4 lg:px-6 lg:pb-3 lg:pt-6`}
     >
       <div className="flex flex-col">
         <div>
-          {chartType === "volume" ? (
-            <span className="text-base leading-5 sm:text-xl font-normal dark:text-[#D1D1D1] text-[#191932] sm:leading-6">
-              {coin?.id && "Volume 24h"}
+          {chartType === 'volume' ? (
+            <span className="text-base font-normal leading-5 text-[#191932] dark:text-[#D1D1D1] sm:text-xl sm:leading-6">
+              {coin?.id && 'Volume 24h'}
             </span>
           ) : (
             <>
-              <span className="text-base leading-5 sm:text-xl font-normal dark:text-[#D1D1D1] text-[#191932] sm:leading-6 capitalize">
+              <span className="text-base font-normal capitalize leading-5 text-[#191932] dark:text-[#D1D1D1] sm:text-xl sm:leading-6">
                 {coinDetails?.name}
               </span>
-              <span className="ml-1 text-base leading-5 sm:text-xl font-normal dark:text-[#D1D1D1] text-[#191932] sm:leading-6 uppercase">
+              <span className="ml-1 text-base font-normal uppercase leading-5 text-[#191932] dark:text-[#D1D1D1] sm:text-xl sm:leading-6">
                 ({coinDetails?.symbol})
               </span>
             </>
           )}
         </div>
-        <span className="text-xl sm:text-[28px] font-medium sm:font-bold leading-7 mt-3 sm:mt-6">
-          {currentValue &&
-            `${currencySymbol}${formatNumber(parseFloat(currentValue))}`}
+        <span className="mt-3 text-xl font-medium leading-7 sm:mt-6 sm:text-[28px] sm:font-bold">
+          {currentValue && `${currencySymbol}${formatNumber(parseFloat(currentValue))}`}
         </span>
-        <span className="text-xs leading-4 mt-2 sm:text-base font-normal dark:text-[#B9B9BA] text-[#424286] sm:leading-6 sm:mt-4">
+        <span className="mt-2 text-xs font-normal leading-4 text-[#424286] dark:text-[#B9B9BA] sm:mt-4 sm:text-base sm:leading-6">
           {currentDate}
         </span>
       </div>
       <ResponsiveContainer width="100%" height={266}>
-        {chartType === "volume" ? (
-          <BarChart 
-            data={formattedData} 
-            onMouseMove={handleMouseMove}
-          >
+        {chartType === 'volume' ? (
+          <BarChart data={formattedData} onMouseMove={handleMouseMove}>
             <defs>
               <linearGradient id="colorBarChart" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="1%" stopColor="#B374F2" />
@@ -181,10 +172,7 @@ export default function CoinChart({
             <Bar dataKey="volume" stroke="" fill="url(#colorBarChart)" />
           </BarChart>
         ) : (
-          <AreaChart 
-            data={formattedData} 
-            onMouseMove={handleMouseMove}
-          >
+          <AreaChart data={formattedData} onMouseMove={handleMouseMove}>
             <defs>
               <linearGradient id="colorAreaChart" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="1%" stopColor="#7474F2" stopOpacity={0.6} />
@@ -199,14 +187,9 @@ export default function CoinChart({
               interval="preserveStartEnd"
               tickMargin={5}
             />
-            <YAxis hide={true} domain={["dataMin", "dataMax"]} />
+            <YAxis hide={true} domain={['dataMin', 'dataMax']} />
             <Tooltip content={<></>} />
-            <Area
-              dataKey="value"
-              stroke="#7878FA"
-              strokeWidth={3}
-              fill="url(#colorAreaChart)"
-            />
+            <Area dataKey="value" stroke="#7878FA" strokeWidth={3} fill="url(#colorAreaChart)" />
           </AreaChart>
         )}
       </ResponsiveContainer>

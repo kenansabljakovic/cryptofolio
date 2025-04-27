@@ -1,22 +1,18 @@
-"use client";
-import { useState, useEffect, useRef } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { Spinner } from "@nextui-org/spinner";
-import { useAppSelector } from "../../redux/store";
-import { useGetCoinMarketPaginatedQuery } from "../services/api";
-import { Table, TableBody, TableHead, TableHeader, TableRow } from "./ui/table";
-import CoinsMarketStats from "./CoinsMarketStats";
+'use client';
+import { useState, useEffect, useRef } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { Spinner } from '@nextui-org/spinner';
+import { useAppSelector } from '../../redux/store';
+import { useGetCoinMarketPaginatedQuery } from '../services/api';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from './ui/table';
+import CoinsMarketStats from './CoinsMarketStats';
 
 export default function TableCoins() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  
-  const currencyCode = useAppSelector(
-    (state) => state.currency.currentCurrency.code
-  );
 
-  const resetTrigger = useAppSelector((state) => state.currency.resetTrigger);
-  
+  const currencyCode = useAppSelector((state) => state.currency.currentCurrency.code);
+
   // Track previous currency to detect changes
   const prevCurrencyRef = useRef(currencyCode);
 
@@ -24,7 +20,11 @@ export default function TableCoins() {
   // Skip the query on the very first render after a currency change while we are resetting the page to 1
   const shouldSkip = prevCurrencyRef.current !== currencyCode && page !== 1;
 
-  const { data: coins = [], isLoading, error, isFetching } = useGetCoinMarketPaginatedQuery(
+  const {
+    data: coins = [],
+    isFetching,
+    error,
+  } = useGetCoinMarketPaginatedQuery(
     {
       currency: currencyCode,
       page: page,
@@ -46,7 +46,7 @@ export default function TableCoins() {
   const fetchMoreData = () => {
     // Only fetch more if we're not already fetching and have more data to fetch
     if (!isFetching && coins.length < 300) {
-      setPage(prevPage => prevPage + 1);
+      setPage((prevPage) => prevPage + 1);
     } else if (coins.length >= 300) {
       setHasMore(false);
     }
@@ -66,36 +66,36 @@ export default function TableCoins() {
           <Spinner color="default" />
         </div>
       }
-      endMessage={<p className="text-center mt-4 mb-4">You are all set! No more records to load.</p>}
+      endMessage={<p className="my-4 text-center">You are all set! No more records to load.</p>}
     >
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="hidden lg:table-cell text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
+            <TableHead className="hidden text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1] lg:table-cell">
               #
             </TableHead>
-            <TableHead className="text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
+            <TableHead className="text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1]">
               Name
             </TableHead>
-            <TableHead className="text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
+            <TableHead className="text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1]">
               Price
             </TableHead>
-            <TableHead className="hidden lg:table-cell text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
+            <TableHead className="hidden text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1] lg:table-cell">
               1h%
             </TableHead>
-            <TableHead className="text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
+            <TableHead className="text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1]">
               24h %
             </TableHead>
-            <TableHead className="hidden lg:table-cell text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
+            <TableHead className="hidden text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1] lg:table-cell">
               7d%
             </TableHead>
-            <TableHead className="hidden lg:table-cell text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
+            <TableHead className="hidden text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1] lg:table-cell">
               24h volume / Market Cap
             </TableHead>
-            <TableHead className="hidden lg:table-cell text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4">
+            <TableHead className="hidden text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1] lg:table-cell">
               Circulating / Total supply
             </TableHead>
-            <TableHead className="hidden lg:table-cell text-sm font-normal dark:text-[#D1D1D1] text-[#424286] leading-4 text-right">
+            <TableHead className="hidden text-right text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1] lg:table-cell">
               Last 7d
             </TableHead>
           </TableRow>

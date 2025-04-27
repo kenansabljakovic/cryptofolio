@@ -1,33 +1,27 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { useDispatch } from "react-redux";
-import { ChevronDown } from "lucide-react";
-import { Button } from "../components/ui/button";
+import * as React from 'react';
+import { useDispatch } from 'react-redux';
+import { ChevronDown } from 'lucide-react';
+import { Button } from '../components/ui/button';
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "../components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../components/ui/popover";
-import { ScrollArea } from "../components/ui/scroll-area";
-import { updateCurrency } from "../../redux/features/currencySlice";
-import { AppDispatch, useAppSelector } from "../../redux/store";
+} from '../components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
+import { ScrollArea } from '../components/ui/scroll-area';
+import { updateCurrency } from '../../redux/features/currencySlice';
+import { AppDispatch, useAppSelector } from '../../redux/store';
 
 export default function DropDownCurrencies() {
   const [open, setOpen] = React.useState(false);
 
   const dispatch: AppDispatch = useDispatch();
   const currencies = useAppSelector((state) => state.currency.currencies);
-  const currentCurrency = useAppSelector(
-    (state) => state.currency.currentCurrency
-  );
+  const currentCurrency = useAppSelector((state) => state.currency.currentCurrency);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -36,17 +30,17 @@ export default function DropDownCurrencies() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[65px] h-9 sm:w-[90px] sm:h-10 md:w-[95px] md:h-11 lg:w-[108px] lg:h-12 dark:bg-[#191925] dark:opacity-100 bg-[#CCCCFA] bg-opacity-40"
+          className="h-9 w-[65px] bg-[#CCCCFA]/40 dark:bg-[#191925] dark:opacity-100 sm:h-10 sm:w-[90px] md:h-11 md:w-[95px] lg:h-12 lg:w-[108px]"
         >
-          <div className="flex gap-2 items-center">
-            <span className="hidden sm:inline sm:dark:bg-white sm:dark:text-black sm:bg-[#424286] sm:text-white sm:rounded-full sm:px-[6px]">
+          <div className="flex items-center gap-2">
+            <span className="hidden sm:inline sm:rounded-full sm:bg-[#424286] sm:px-[6px] sm:text-white sm:dark:bg-white sm:dark:text-black">
               {currentCurrency.symbol}
             </span>
-            <span className="dark:text-[#D1D1D1] text-[#424286] text-sm font-medium leading-6 text-opacity-80 uppercase">
+            <span className="text-sm font-medium uppercase leading-6 text-[#424286] text-opacity-80 dark:text-[#D1D1D1]">
               {currentCurrency.code}
             </span>
           </div>
-          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronDown className="ml-2 size-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
 
