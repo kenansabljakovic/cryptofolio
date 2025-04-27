@@ -1,35 +1,35 @@
-import { Skeleton } from "../components/ui/skeleton";
+import { Skeleton } from '../components/ui/skeleton';
 
 export default function VolumeChartSkeleton() {
   return (
-    <div className="w-full flex flex-col dark:bg-[#191932] bg-white rounded-xl pt-4 lg:pt-6 pb-4 lg:pb-6 px-4 lg:px-6">
+    <div className="flex w-full flex-col rounded-xl bg-white p-4 dark:bg-[#191932] lg:p-6">
       <div className="flex flex-col">
-        <Skeleton className="w-[120px] h-[26px]"></Skeleton>
-        <Skeleton className="w-[110px] h-7 mt-3 sm:mt-6"></Skeleton>
-        <Skeleton className="w-[100px] h-6 mt-2 sm:mt-4"></Skeleton>
+        <Skeleton className="h-[26px] w-[120px]"></Skeleton>
+        <Skeleton className="mt-3 h-7 w-[110px] sm:mt-6"></Skeleton>
+        <Skeleton className="mt-2 h-6 w-[100px] sm:mt-4"></Skeleton>
       </div>
-      <div className="flex justify-between gap-1 h-full items-end">
-        <Skeleton className="w-full h-[20%]" />
-        <Skeleton className="w-full h-[60%]" />
-        <Skeleton className="w-full h-[80%]" />
-        <Skeleton className="w-full h-[30%]" />
-        <Skeleton className="w-full h-[70%]" />
-        <Skeleton className="w-full h-[50%]" />
-        <Skeleton className="w-full h-[90%]" />
-        <Skeleton className="w-full h-[40%]" />
-        <Skeleton className="w-full h-[100%]" />
-        <Skeleton className="w-full h-[30%]" />
-        <Skeleton className="w-full h-[70%]" />
-        <Skeleton className="w-full h-[50%]" />
-        <Skeleton className="w-full h-[90%]" />
+      <div className="flex h-full items-end justify-between gap-1">
+        <Skeleton className="h-1/5 w-full" />
+        <Skeleton className="h-3/5 w-full" />
+        <Skeleton className="h-4/5 w-full" />
+        <Skeleton className="h-[30%] w-full" />
+        <Skeleton className="h-[70%] w-full" />
+        <Skeleton className="h-1/2 w-full" />
+        <Skeleton className="h-[90%] w-full" />
+        <Skeleton className="h-2/5 w-full" />
+        <Skeleton className="size-full" />
+        <Skeleton className="h-[30%] w-full" />
+        <Skeleton className="h-[70%] w-full" />
+        <Skeleton className="h-1/2 w-full" />
+        <Skeleton className="h-[90%] w-full" />
       </div>
-      <div className="flex justify-between gap-1 mt-2">
-        <Skeleton className="w-[41px] h-5"></Skeleton>
-        <Skeleton className="w-[41px] h-5"></Skeleton>
-        <Skeleton className="w-[41px] h-5"></Skeleton>
-        <Skeleton className="w-[41px] h-5"></Skeleton>
-        <Skeleton className="w-[41px] h-5"></Skeleton>
-        <Skeleton className="w-[41px] h-5"></Skeleton>
+      <div className="mt-2 flex justify-between gap-1">
+        <Skeleton className="h-5 w-[41px]"></Skeleton>
+        <Skeleton className="h-5 w-[41px]"></Skeleton>
+        <Skeleton className="h-5 w-[41px]"></Skeleton>
+        <Skeleton className="h-5 w-[41px]"></Skeleton>
+        <Skeleton className="h-5 w-[41px]"></Skeleton>
+        <Skeleton className="h-5 w-[41px]"></Skeleton>
       </div>
     </div>
   );

@@ -1,10 +1,10 @@
-"use client";
-import { useSelector, TypedUseSelectorHook } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
+'use client';
+import { useSelector, TypedUseSelectorHook } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { cryptoApi } from '../app/services/api';
-import currencyReducer from "./features/currencySlice";
-import timelineReducer from "./features/timelineSlice";
+import currencyReducer from './features/currencySlice';
+import timelineReducer from './features/timelineSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,8 +12,7 @@ export const store = configureStore({
     currency: currencyReducer,
     timeline: timelineReducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(cryptoApi.middleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(cryptoApi.middleware),
 });
 
 setupListeners(store.dispatch);

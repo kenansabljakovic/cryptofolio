@@ -1,12 +1,12 @@
-"use client";
-import { useRef } from "react";
-import Link from "next/link";
-import { Inter } from "next/font/google";
+'use client';
+import { useRef } from 'react';
+import Link from 'next/link';
+import { Inter } from 'next/font/google';
 
 const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  display: "swap",
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+  display: 'swap',
 });
 
 type Cryptocurrency = {
@@ -33,9 +33,7 @@ export default function SearchResultsList({
         <li
           key={coin.id}
           className={`py-2 ${
-            index === selectedIndex
-              ? "bg-gray-200 dark:bg-gray-600 rounded-md"
-              : ""
+            index === selectedIndex ? 'rounded-md bg-gray-200 dark:bg-gray-600' : ''
           }`}
         >
           <Link
@@ -43,9 +41,7 @@ export default function SearchResultsList({
             className="flex items-center gap-4"
             onClick={() => onCoinClick(coin.id)}
           >
-            <span className={`${inter.className} text-sm leading-[22px] pl-2`}>
-              {coin.name}
-            </span>
+            <span className={`${inter.className} pl-2 text-sm leading-[22px]`}>{coin.name}</span>
           </Link>
         </li>
       ))}
