@@ -53,59 +53,68 @@ export default function TableCoins() {
   };
 
   if (error) {
-    return <div>Error fetching data</div>;
+    return (
+      <div className="p-4 text-red-500" data-testid="table-error">
+        Error fetching data
+      </div>
+    );
   }
 
   return (
-    <InfiniteScroll
-      dataLength={coins.length}
-      next={fetchMoreData}
-      hasMore={hasMore}
-      loader={
-        <div className="mt-2 text-center">
-          <Spinner color="default" />
-        </div>
-      }
-      endMessage={<p className="my-4 text-center">You are all set! No more records to load.</p>}
-    >
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="hidden text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1] lg:table-cell">
-              #
-            </TableHead>
-            <TableHead className="text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1]">
-              Name
-            </TableHead>
-            <TableHead className="text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1]">
-              Price
-            </TableHead>
-            <TableHead className="hidden text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1] lg:table-cell">
-              1h%
-            </TableHead>
-            <TableHead className="text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1]">
-              24h %
-            </TableHead>
-            <TableHead className="hidden text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1] lg:table-cell">
-              7d%
-            </TableHead>
-            <TableHead className="hidden text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1] lg:table-cell">
-              24h volume / Market Cap
-            </TableHead>
-            <TableHead className="hidden text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1] lg:table-cell">
-              Circulating / Total supply
-            </TableHead>
-            <TableHead className="hidden text-right text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1] lg:table-cell">
-              Last 7d
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {coins.map((coin, index) => (
-            <CoinsMarketStats key={coin.id} coin={coin} index={index} />
-          ))}
-        </TableBody>
-      </Table>
-    </InfiniteScroll>
+    <div className="w-full overflow-x-auto">
+      <InfiniteScroll
+        dataLength={coins?.length || 0}
+        next={fetchMoreData}
+        hasMore={hasMore}
+        loader={
+          <div className="mt-4 flex justify-center">
+            <Spinner color="default" role="status" />
+          </div>
+        }
+        endMessage={<p className="my-4 text-center">You are all set! No more records to load.</p>}
+        style={{ overflow: 'hidden' }}
+        className="w-full"
+        scrollableTarget="window"
+      >
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="hidden text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1] lg:table-cell">
+                #
+              </TableHead>
+              <TableHead className="text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1]">
+                Name
+              </TableHead>
+              <TableHead className="text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1]">
+                Price
+              </TableHead>
+              <TableHead className="hidden text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1] lg:table-cell">
+                1h%
+              </TableHead>
+              <TableHead className="text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1]">
+                24h %
+              </TableHead>
+              <TableHead className="hidden text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1] lg:table-cell">
+                7d%
+              </TableHead>
+              <TableHead className="hidden text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1] lg:table-cell">
+                24h volume / Market Cap
+              </TableHead>
+              <TableHead className="hidden text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1] lg:table-cell">
+                Circulating / Total supply
+              </TableHead>
+              <TableHead className="hidden text-right text-sm font-normal leading-4 text-[#424286] dark:text-[#D1D1D1] lg:table-cell">
+                Last 7d
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {coins.map((coin, index) => (
+              <CoinsMarketStats key={coin.id} coin={coin} index={index} />
+            ))}
+          </TableBody>
+        </Table>
+      </InfiniteScroll>
+    </div>
   );
 }
