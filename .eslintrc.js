@@ -55,5 +55,14 @@ module.exports = {
     'tailwindcss/classnames-order': 'warn',
   },
   // Ignore generated files and config files from linting
-  ignorePatterns: ['.eslintrc.js', '.prettierrc.js', 'node_modules/', '.next/', 'out/', 'build/'],
+  ignorePatterns: [
+    '.eslintrc.js',
+    '.prettierrc.js',
+    'node_modules/',
+    '.next/',
+    'out/',
+    'build/',
+    'jest.config.js',
+    'jest.setup.js',
+  ],
 };
