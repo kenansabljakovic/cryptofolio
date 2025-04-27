@@ -47,8 +47,14 @@ describe('GraphCoins Component', () => {
     // Mock implementation for successful data
     (useGetCoinMarketChartQuery as jest.Mock).mockImplementation(() => ({
       data: {
-        prices: [[Date.now(), 50000], [Date.now() + 3600000, 51000]],
-        total_volumes: [[Date.now(), 1000000], [Date.now() + 3600000, 1200000]],
+        prices: [
+          [Date.now(), 50000],
+          [Date.now() + 3600000, 51000],
+        ],
+        total_volumes: [
+          [Date.now(), 1000000],
+          [Date.now() + 3600000, 1200000],
+        ],
       },
       isLoading: false,
       error: null,
