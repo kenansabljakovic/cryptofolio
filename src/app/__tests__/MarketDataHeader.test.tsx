@@ -60,7 +60,7 @@ describe('MarketDataHeader Component', () => {
         market_cap_change_percentage_24h_usd: 1.5,
         active_cryptocurrencies: 10000,
         markets: 150,
-      }
+      },
     };
 
     (useGetGlobalDataQuery as jest.Mock).mockReturnValue({
