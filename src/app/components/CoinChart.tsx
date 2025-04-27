@@ -10,7 +10,7 @@ import {
   Area,
   YAxis,
 } from 'recharts';
-import { useAppSelector } from '../../redux/store';
+import { useSearchParams } from 'next/navigation';
 import { useGetCoinMarketChartQuery, useGetCoinDetailsQuery } from '../services/api';
 import formatNumber from '../utils/formatNumber';
 import formatDateGraphs from '../utils/formatDateGraph';
@@ -36,12 +36,29 @@ export default function CoinChart({
   currencySymbol,
   selectedCoin,
 }: CoinChartProps) {
-  const days = useAppSelector((state) => state.timeline.currentTimeline.days);
+  // Read timeline ID from URL, default to '1d'
+  const searchParams = useSearchParams();
+  // Handle null searchParams in test environment
+  const timelineId = searchParams?.get('timeline') || '1d';
+
+  // Map timeline ID to number of days
+  // (Adjust this map based on the IDs used in Timeline.tsx)
+  const timelineDaysMap: { [key: string]: number } = {
+    '1d': 1,
+    '7d': 7,
+    '14d': 14,
+    '1m': 30,
+    '3m': 90,
+    '1y': 365,
+    max: 0, // Or adjust based on API needs for 'max'
+  };
+  const days = timelineDaysMap[timelineId] ?? 1; // Default to 1 if ID is unknown
+
   const [currentValue, setCurrentValue] = useState('');
   const [currentDate, setCurrentDate] = useState('');
 
-  // Create a wrapper function for formatDateGraphs to match Recharts' expected signature
-  const formatTick = (value: string) => formatDateGraphs(value, days);
+  // Pass 'days' as string to formatDateGraphs
+  const formatTick = (value: string | number) => formatDateGraphs(String(value), String(days));
 
   // Use RTK Query hooks instead of dispatching actions
   const {
@@ -49,15 +66,12 @@ export default function CoinChart({
     isLoading,
     error,
   } = useGetCoinMarketChartQuery({
-    coinId: selectedCoin,
+    coinId: selectedCoin, // Changed back from id
     currency: currencyCode,
-    days: days,
+    days: String(days), // Keep passing days as string to query hook based on previous type error
   });
 
-  // Get coin details (only for price charts)
-  const { data: coinDetails } = useGetCoinDetailsQuery(selectedCoin, {
-    skip: chartType === 'volume', // Skip this request for volume charts
-  });
+  const { data: coinDetails } = useGetCoinDetailsQuery(selectedCoin);
 
   useEffect(() => {
     if (chartData) {

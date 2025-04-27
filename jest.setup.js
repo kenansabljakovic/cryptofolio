@@ -27,14 +27,15 @@ window.ResizeObserver = ResizeObserver;
 // Mock the entire API service globally
 jest.mock('@/app/services/api', () => {
   // Default mock implementation for RTK Query hooks
-  const createMockHook = () => jest.fn().mockReturnValue({
-    data: undefined,
-    isLoading: true, // Default to loading state
-    isFetching: false,
-    isSuccess: false,
-    isError: false,
-    error: null,
-  });
+  const createMockHook = () =>
+    jest.fn().mockReturnValue({
+      data: undefined,
+      isLoading: true, // Default to loading state
+      isFetching: false,
+      isSuccess: false,
+      isError: false,
+      error: null,
+    });
 
   return {
     __esModule: true, // Ensure proper module mocking
