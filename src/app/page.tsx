@@ -4,7 +4,7 @@ import CarouselCoins from './components/CarouselCoins';
 import GraphCoins from './components/GraphCoins';
 import Timeline from './components/Timeline';
 import TableCoins from './components/TableCoins';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 
 export default function Home() {
   const [selectedCoin, setSelectedCoin] = useState('bitcoin');
@@ -16,10 +16,14 @@ export default function Home() {
         <CarouselCoins clickedCoin={setSelectedCoin} selectedCoin={selectedCoin} />
       </div>
       <div className="mx-auto mt-4 max-w-[1440px] px-6 sm:mt-10 sm:px-[42px] xl:px-[72px]">
-        <GraphCoins selectedCoin={selectedCoin} />
+        <Suspense fallback={null}>
+          <GraphCoins selectedCoin={selectedCoin} />
+        </Suspense>
       </div>
       <div className="mx-auto mt-4 max-w-[1440px] px-6 sm:mt-10 sm:px-[42px] xl:px-[72px]">
-        <Timeline />
+        <Suspense fallback={null}>
+          <Timeline />
+        </Suspense>
       </div>
       <div className="mx-auto mt-4 max-w-[1440px] px-6 sm:mt-10 sm:px-[42px] xl:px-[72px]">
         <TableCoins />
