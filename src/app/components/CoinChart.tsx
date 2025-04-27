@@ -80,7 +80,10 @@ export default function CoinChart({
   // Show loading state while data is being fetched
   if (isLoading || !chartData || (chartType === 'price' && !coinDetails)) {
     return (
-      <div className="flex w-full flex-wrap gap-4 md:flex-nowrap lg:gap-8">
+      <div
+        className="flex w-full flex-wrap gap-4 md:flex-nowrap lg:gap-8"
+        data-testid="graph-loading"
+      >
         {chartType === 'price' ? <PriceChartSkeleton /> : <VolumeChartSkeleton />}
       </div>
     );
