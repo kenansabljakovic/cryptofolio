@@ -2,11 +2,14 @@
 import { useState, useEffect, useRef, KeyboardEvent } from 'react';
 import Link from 'next/link';
 import { Inter } from 'next/font/google';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useClickAway } from 'react-use';
 import ThemeSwitch from './ThemeSwitch';
 import DropDownCurrencies from './DropDownCurrencies';
 import { CryptofolioLogoIcon } from '../icons/CryptofolioLogoIcon';
+import { HomeIcon } from '../icons/HomeIcon';
+import { PortfolioIcon } from '../icons/PortfolioIcon';
+import { ExchangeIcon } from '../icons/ExchangeIcon';
 import { Input } from '../../app/components/ui/input';
 import StyledNavbarLink from './StyledNavbarLink';
 import SearchResultsListSkeleton from './SearchResultsListSkeleton';
@@ -46,6 +49,19 @@ export default function Navbar() {
   const resultsRef = useRef<HTMLUListElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currencyParam = searchParams?.get('currency');
+  const currencyQueryString = currencyParam ? `?currency=${currencyParam}` : '';
+
+  // Define classes for mobile navigation links
+  const mobileLinkClasses = (isActive: boolean) => {
+    const baseClasses =
+      'inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group';
+    const activeClasses = 'text-blue-600 dark:text-blue-500';
+    const inactiveClasses = 'text-gray-500 dark:text-gray-400';
+    return `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`;
+  };
 
   useEffect(() => {
     if (searchQuery) {
@@ -139,10 +155,10 @@ export default function Navbar() {
     <div className="w-full bg-white dark:bg-[#13121A]">
       <nav className="mx-auto flex max-w-[1440px] justify-between px-6 py-4 sm:px-[42px] xl:px-[72px]">
         <div className="flex items-center gap-[10px] font-bold text-white">
-          <Link href="/">
+          <Link href={`/${currencyQueryString}`}>
             <CryptofolioLogoIcon />
           </Link>
-          <Link href="/">
+          <Link href={`/${currencyQueryString}`}>
             <span
               className={`${inter.className} hidden py-2 text-[#353570] dark:text-white md:text-lg lg:inline lg:text-xl`}
             >
@@ -153,13 +169,13 @@ export default function Navbar() {
         <div className="hidden sm:flex sm:gap-7 lg:gap-14">
           <div className="flex items-center gap-[10px]">
             <div className="rounded-md border border-[#7878FA] bg-[rgb(120,120,250,0.7)] p-1.5 sm:border-none sm:bg-transparent">
-              <StyledNavbarLink href="/" icon="home">
+              <StyledNavbarLink href={`/${currencyQueryString}`} icon="home">
                 Home
               </StyledNavbarLink>
             </div>
           </div>
           <div className="flex items-center gap-[10px] rounded-md bg-[#CCCCFA]/40 px-3 dark:bg-[#232336] sm:bg-transparent sm:px-0 sm:dark:bg-transparent">
-            <StyledNavbarLink href="/portfolio" icon="portfolio">
+            <StyledNavbarLink href={`/portfolio${currencyQueryString}`} icon="portfolio">
               Portfolio
             </StyledNavbarLink>
           </div>
@@ -198,6 +214,25 @@ export default function Navbar() {
           <ThemeSwitch />
         </div>
       </nav>
+      {/* Mobile Bottom Navigation Bar */}
+      <div className="fixed bottom-0 left-0 z-50 grid h-16 w-full grid-cols-3 border-t border-gray-200 bg-white dark:border-gray-600 dark:bg-[#13121A] sm:hidden">
+        {/* Ensure mobile links preserve currency */}
+        <Link href={`/${currencyQueryString}`} className={mobileLinkClasses(pathname === '/')}>
+          <HomeIcon isActive={pathname === '/'} />
+        </Link>
+        <Link
+          href={`/portfolio${currencyQueryString}`}
+          className={mobileLinkClasses(pathname === '/portfolio')}
+        >
+          <PortfolioIcon isActive={pathname === '/portfolio'} />
+        </Link>
+        <Link
+          href={`/converter${currencyQueryString}`}
+          className={mobileLinkClasses(pathname === '/converter')}
+        >
+          <ExchangeIcon />
+        </Link>
+      </div>
     </div>
   );
 }
