@@ -11,7 +11,9 @@ export default function Home() {
 
   return (
     <main className="pb-10">
-      <NavHome />
+      <Suspense fallback={null}>
+        <NavHome />
+      </Suspense>
       <div className="mx-auto mt-5 max-w-[1440px] px-6 sm:mt-10 sm:px-[42px] xl:px-[72px]">
         <CarouselCoins clickedCoin={setSelectedCoin} selectedCoin={selectedCoin} />
       </div>
@@ -26,7 +28,9 @@ export default function Home() {
         </Suspense>
       </div>
       <div className="mx-auto mt-4 max-w-[1440px] px-6 sm:mt-10 sm:px-[42px] xl:px-[72px]">
-        <TableCoins />
+        <Suspense fallback={null}>
+          <TableCoins />
+        </Suspense>
       </div>
     </main>
   );
