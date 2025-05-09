@@ -3,12 +3,10 @@ import { useSelector, TypedUseSelectorHook } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { cryptoApi } from '../app/services/api';
-import currencyReducer from './features/currencySlice';
 
 export const store = configureStore({
   reducer: {
     [cryptoApi.reducerPath]: cryptoApi.reducer,
-    currency: currencyReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(cryptoApi.middleware),
 });

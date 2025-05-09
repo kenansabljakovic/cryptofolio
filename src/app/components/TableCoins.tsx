@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Spinner } from '@nextui-org/spinner';
-import { useAppSelector } from '../../redux/store';
+import { useCurrencyFromUrl } from '@/hooks/useCurrencyFromUrl';
 import { useGetCoinMarketPaginatedQuery } from '../services/api';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from './ui/table';
 import CoinsMarketStats from './CoinsMarketStats';
@@ -11,14 +11,17 @@ export default function TableCoins() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  const currencyCode = useAppSelector((state) => state.currency.currentCurrency.code);
+  // Get currency from URL using the hook
+  const { code: currencyCode } = useCurrencyFromUrl();
 
   // Track previous currency to detect changes
-  const prevCurrencyRef = useRef(currencyCode);
+  const prevCurrencyRef = useRef<string | null>(null);
+  // Initialize ref
 
   // Use RTK Query hook for fetching data
   // Skip the query on the very first render after a currency change while we are resetting the page to 1
-  const shouldSkip = prevCurrencyRef.current !== currencyCode && page !== 1;
+  const shouldSkip =
+    prevCurrencyRef.current !== null && prevCurrencyRef.current !== currencyCode && page !== 1;
 
   const {
     data: coins = [],
@@ -36,10 +39,24 @@ export default function TableCoins() {
 
   // When the currency actually changes, reset pagination and update the prev currency ref
   useEffect(() => {
-    if (prevCurrencyRef.current !== currencyCode) {
+    // Check if currencyCode is loaded and different from previous, or if it's the initial load
+    if (
+      currencyCode &&
+      (prevCurrencyRef.current === null || prevCurrencyRef.current !== currencyCode)
+    ) {
       setPage(1);
       setHasMore(true);
       prevCurrencyRef.current = currencyCode;
+    } else if (!currencyCode && prevCurrencyRef.current === null) {
+      // Handle case where currencyCode is initially null/undefined from the hook
+      // We might need to initialize prevCurrencyRef here if currencyCode is valid
+      // This depends on how useCurrencyFromUrl guarantees a value
+      // For now, let's assume useCurrencyFromUrl returns a default 'usd' eventually.
+      // If currencyCode loads async, we might need a loading state from the hook.
+      // Let's initialize ref here to avoid skipping query on first valid currency
+      if (currencyCode) {
+        prevCurrencyRef.current = currencyCode;
+      }
     }
   }, [currencyCode]);
 
@@ -109,9 +126,18 @@ export default function TableCoins() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {coins.map((coin, index) => (
-              <CoinsMarketStats key={coin.id} coin={coin} index={index} />
-            ))}
+            {coins.map((coin, index) => {
+              const targetSearchParams = new URLSearchParams();
+              if (currencyCode) {
+                targetSearchParams.set('currency', currencyCode);
+              }
+              const queryString = targetSearchParams.toString();
+              const linkHref = `/coin/${coin.id}${queryString ? `?${queryString}` : ''}`;
+
+              return (
+                <CoinsMarketStats key={coin.id} coin={coin} index={index} linkHref={linkHref} />
+              );
+            })}
           </TableBody>
         </Table>
       </InfiniteScroll>

@@ -1,5 +1,5 @@
 'use client';
-import { useAppSelector } from '../../../redux/store';
+import { useCurrencyFromUrl } from '@/hooks/useCurrencyFromUrl';
 import { useGetCoinPageInfoQuery } from '../../../app/services/api';
 import CoinPageSkeleton from '../../../app/components/CoinPageSkeleton';
 import CoinPriceInfo from '../../../app/components/CoinPriceInfo';
@@ -14,8 +14,7 @@ type CoinPageProps = {
 
 export default function CoinPage({ params }: CoinPageProps) {
   const { data, isLoading, error } = useGetCoinPageInfoQuery(params.id);
-  const currencyCode = useAppSelector((state) => state.currency.currentCurrency.code);
-  const currencySymbol = useAppSelector((state) => state.currency.currentCurrency.symbol);
+  const { code: currencyCode, symbol: currencySymbol } = useCurrencyFromUrl();
 
   if (isLoading || !data) return <CoinPageSkeleton />;
   if (error) {

@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { useAppSelector } from '../../redux/store';
 import { ChevronUpIcon } from '../icons/ChevronUpIcon';
 import { ChevronDownIcon } from '../icons/ChevronDownIcon';
 import { Progress } from '../components/ui/progress';
@@ -31,10 +30,10 @@ type SparklineIn7d = {
 type CoinsMarketStatsProps = {
   coin: Coin;
   index: number;
+  linkHref: string;
 };
 
-export default function CoinsMarketStats({ coin, index }: CoinsMarketStatsProps) {
-  const currencySymbol = useAppSelector((state) => state.currency.currentCurrency.symbol);
+export default function CoinsMarketStats({ coin, index, linkHref }: CoinsMarketStatsProps) {
   return (
     <>
       <tr className="h-2 bg-transparent"></tr>
@@ -52,7 +51,7 @@ export default function CoinsMarketStats({ coin, index }: CoinsMarketStatsProps)
               width={32}
               height={32}
             />
-            <Link href={`/coin/${coin.id}`}>
+            <Link href={linkHref}>
               <div>
                 <span className="hidden text-[#232336] dark:text-white lg:inline lg:text-base lg:font-medium lg:leading-6">
                   {coin.name}
@@ -67,7 +66,6 @@ export default function CoinsMarketStats({ coin, index }: CoinsMarketStatsProps)
           </div>
         </TableCell>
         <TableCell className="text-sm font-medium leading-5 text-[#232336] dark:text-white sm:text-base sm:leading-6">
-          {currencySymbol}
           {coin.current_price}
         </TableCell>
         <TableCell>
@@ -120,14 +118,8 @@ export default function CoinsMarketStats({ coin, index }: CoinsMarketStatsProps)
         </TableCell>
         <TableCell className="hidden text-base font-medium leading-6 text-[#232336] dark:text-white md:table-cell md:rounded-r-xl lg:rounded-none">
           <div className="flex justify-between">
-            <span className="text-xs font-normal">
-              {currencySymbol}
-              {formatNumber(coin.total_volume)}
-            </span>
-            <span className="text-xs font-normal">
-              {currencySymbol}
-              {formatNumber(coin.market_cap)}
-            </span>
+            <span className="text-xs font-normal">{formatNumber(coin.total_volume)}</span>
+            <span className="text-xs font-normal">{formatNumber(coin.market_cap)}</span>
           </div>
           <Progress
             className="h-[6px] w-full bg-gray-500"

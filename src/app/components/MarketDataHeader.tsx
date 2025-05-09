@@ -1,5 +1,5 @@
 'use client';
-import { useAppSelector } from '../../redux/store';
+import { useCurrencyFromUrl } from '@/hooks/useCurrencyFromUrl';
 import { useGetGlobalDataQuery } from '../services/api';
 import { CoinsIcon } from '../icons/CoinsIcon';
 import { ExchangeIcon } from '../icons/ExchangeIcon';
@@ -14,7 +14,7 @@ import getPercentage from '../../app/utils/getPercentage';
 
 export default function MarketDataHeader() {
   const { data: globalDataResponse, isLoading, error } = useGetGlobalDataQuery();
-  const { symbol, code } = useAppSelector((state) => state.currency.currentCurrency);
+  const { symbol, code } = useCurrencyFromUrl();
 
   if (isLoading) {
     return <MarketDataHeaderSkeleton />;
