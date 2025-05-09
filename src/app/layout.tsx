@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Space_Grotesk } from 'next/font/google';
+import { Suspense } from 'react';
 import './globals.css';
 import Navbar from './components/Navbar';
 import MarketDataHeader from './components/MarketDataHeader';
@@ -27,7 +28,9 @@ export default function RootLayout({
         <Providers>
           <header>
             <MarketDataHeader />
-            <Navbar />
+            <Suspense fallback={<div>Loading navbar...</div>}>
+              <Navbar />
+            </Suspense>
           </header>
           {children}
         </Providers>
