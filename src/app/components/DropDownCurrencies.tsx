@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 import { ChevronDown } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import {
@@ -13,15 +12,53 @@ import {
 } from '../components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import { ScrollArea } from '../components/ui/scroll-area';
-import { updateCurrency } from '../../redux/features/currencySlice';
-import { AppDispatch, useAppSelector } from '../../redux/store';
+import { useCurrencyFromUrl, useSafeRouter, useSafePathname } from '@/hooks/useCurrencyFromUrl';
+
+// Define Currency type and the static list of currencies
+type Currency = {
+  symbol: string;
+  code: string;
+};
+
+const currencies: Currency[] = [
+  { symbol: '$', code: 'usd' },
+  { symbol: '€', code: 'eur' },
+  { symbol: '£', code: 'gbp' },
+  { symbol: 'C$', code: 'cad' },
+  { symbol: '₣', code: 'chf' },
+  { symbol: 'A$', code: 'aud' },
+  { symbol: '₹', code: 'inr' },
+  { symbol: '¥', code: 'jpy' },
+  { symbol: 'zł', code: 'pln' },
+  { symbol: '₿', code: 'btc' },
+  { symbol: 'Ξ', code: 'eth' },
+  { symbol: 'Ł', code: 'ltc' },
+];
 
 export default function DropDownCurrencies() {
   const [open, setOpen] = React.useState(false);
 
-  const dispatch: AppDispatch = useDispatch();
-  const currencies = useAppSelector((state) => state.currency.currencies);
-  const currentCurrency = useAppSelector((state) => state.currency.currentCurrency);
+  // Use safe navigation hooks
+  const router = useSafeRouter();
+  const pathname = useSafePathname();
+
+  // Use the custom hook to get currency data from URL
+  const currentCurrency = useCurrencyFromUrl();
+
+  const onSelect = (currency: Currency) => {
+    // Use safe hooks
+    const searchParamsForURL =
+      typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search)
+        : new URLSearchParams();
+
+    const current = new URLSearchParams(Array.from(searchParamsForURL.entries()));
+    current.set('currency', currency.code);
+    const search = current.toString();
+    const query = search ? `?${search}` : '';
+    router.push(`${pathname}${query}`);
+    setOpen(false);
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -51,13 +88,7 @@ export default function DropDownCurrencies() {
           <ScrollArea className="max-h-[100px] overflow-auto">
             <CommandGroup>
               {currencies.map((currency) => (
-                <CommandItem
-                  key={currency.code}
-                  onSelect={() => {
-                    dispatch(updateCurrency(currency));
-                    setOpen(false);
-                  }}
-                >
+                <CommandItem key={currency.code} onSelect={() => onSelect(currency)}>
                   {`${currency.symbol} ${currency.code.toUpperCase()}`}
                 </CommandItem>
               ))}

@@ -1,8 +1,7 @@
 'use client';
-import * as React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 //import Autoplay from "embla-carousel-autoplay";
-import { useAppSelector } from '../../redux/store';
 import { useGetCoinMarketsQuery } from '../services/api';
 import { ChevronUpIcon } from '../icons/ChevronUpIcon';
 import { ChevronDownIcon } from '../icons/ChevronDownIcon';
@@ -12,8 +11,10 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from '../components/ui/carousel';
 import CarouselCoinsSkeleton from './CarouselCoinsSkeleton';
+import { useCurrencyFromUrl } from '@/hooks/useCurrencyFromUrl';
 
 type CarouselCoinsProps = {
   clickedCoin: (value: string) => void;
@@ -21,11 +22,30 @@ type CarouselCoinsProps = {
 };
 
 export default function CarouselCoins({ clickedCoin, selectedCoin }: CarouselCoinsProps) {
-  const currencyCode = useAppSelector((state) => state.currency.currentCurrency.code);
-
-  const currencySymbol = useAppSelector((state) => state.currency.currentCurrency.symbol);
+  const { code: currencyCode, symbol: currencySymbol } = useCurrencyFromUrl();
 
   const { data, isLoading, error } = useGetCoinMarketsQuery(currencyCode);
+
+  const [api, setApi] = useState<CarouselApi>();
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+
+  const onSelect = useCallback((api: CarouselApi) => {
+    if (!api) return;
+    setCanScrollPrev(api.canScrollPrev());
+  }, []);
+
+  useEffect(() => {
+    if (!api) return;
+
+    onSelect(api);
+    api.on('reInit', onSelect);
+    api.on('select', onSelect);
+
+    return () => {
+      api.off('reInit', onSelect);
+      api.off('select', onSelect);
+    };
+  }, [api, onSelect]);
 
   if (isLoading || !data || data.length === 0) return <CarouselCoinsSkeleton />;
   if (error) return <div>Error loading the data.</div>;
@@ -36,15 +56,10 @@ export default function CarouselCoins({ clickedCoin, selectedCoin }: CarouselCoi
 
   return (
     <Carousel
+      setApi={setApi}
       opts={{
         align: 'start',
       }}
-      //Will see if I need this feature (carousel autoplay)
-      /* plugins={[
-        Autoplay({
-          delay: 2000,
-        }),
-      ]} */
       className="w-full"
     >
       <CarouselContent className="-ml-1 sm:-ml-2">
@@ -120,7 +135,9 @@ export default function CarouselCoins({ clickedCoin, selectedCoin }: CarouselCoi
           );
         })}
       </CarouselContent>
-      <CarouselPrevious className="hidden bg-[#6161D6]/50 hover:bg-[#6161D6]/70 dark:bg-[#6161D6]/50 dark:hover:bg-[#6161D6]" />
+      <CarouselPrevious
+        className={`${!canScrollPrev ? 'hidden' : 'sm:inline-flex'} bg-[#6161D6]/50 hover:bg-[#6161D6]/70 dark:bg-[#6161D6]/50 dark:hover:bg-[#6161D6]`}
+      />
       <CarouselNext className="hidden bg-[#6161D6]/50 hover:bg-[#6161D6]/70 dark:bg-[#6161D6]/50 dark:hover:bg-[#6161D6] sm:inline-flex" />
     </Carousel>
   );
