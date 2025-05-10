@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import NavHome from '../components/NavHome';
 
 type ConverterLayoutProps = {
@@ -8,7 +8,9 @@ type ConverterLayoutProps = {
 export default function ConverterLayout({ children }: ConverterLayoutProps) {
   return (
     <>
-      <NavHome />
+      <Suspense fallback={null}>
+        <NavHome />
+      </Suspense>
       {children}
     </>
   );
