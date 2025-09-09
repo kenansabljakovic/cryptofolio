@@ -4,10 +4,11 @@ import CarouselCoins from './components/CarouselCoins';
 import GraphCoins from './components/GraphCoins';
 import Timeline from './components/Timeline';
 import TableCoins from './components/TableCoins';
-import { useState, Suspense } from 'react';
+import { Suspense } from 'react';
+import { useSelectedCoinFromUrl } from '@/hooks/useSelectedCoinFromUrl';
 
 export default function Home() {
-  const [selectedCoin, setSelectedCoin] = useState('bitcoin');
+  const { selectedCoin, setSelectedCoin } = useSelectedCoinFromUrl();
 
   return (
     <main className="pb-10">
