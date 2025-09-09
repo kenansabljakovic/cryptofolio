@@ -27,7 +27,7 @@ export function useSafePathname() {
 
 export function useSelectedCoinFromUrl() {
   const [selectedCoin, setSelectedCoinState] = useState<string>('bitcoin');
-  
+
   const searchParams = useSafeSearchParams();
   const router = useSafeRouter();
   const pathname = useSafePathname();
@@ -43,12 +43,12 @@ export function useSelectedCoinFromUrl() {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(searchParams?.toString() || '');
       params.set('coin', newCoin);
-      
+
       const currentCurrency = searchParams?.get('currency');
       if (currentCurrency) {
         params.set('currency', currentCurrency);
       }
-      
+
       router.push(`${pathname}?${params.toString()}`);
     }
   };
