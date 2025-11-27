@@ -3,6 +3,7 @@ import { Space_Grotesk } from 'next/font/google';
 import { Suspense } from 'react';
 import './globals.css';
 import Navbar from './components/Navbar';
+import NavbarSkeleton from './components/NavbarSkeleton';
 import MarketDataHeader from './components/MarketDataHeader';
 import { Providers } from './providers';
 
@@ -28,7 +29,7 @@ export default function RootLayout({
         <Providers>
           <header>
             <MarketDataHeader />
-            <Suspense fallback={<div>Loading navbar...</div>}>
+            <Suspense fallback={<NavbarSkeleton />}>
               <Navbar />
             </Suspense>
           </header>
