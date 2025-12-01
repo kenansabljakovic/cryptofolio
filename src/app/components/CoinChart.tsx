@@ -49,7 +49,7 @@ export default function CoinChart({
     '1y': 365,
     max: 0,
   };
-  const days = timelineDaysMap[timelineId] ?? 1; 
+  const days = timelineDaysMap[timelineId] ?? 1;
 
   const [currentValue, setCurrentValue] = useState('');
   const [currentDate, setCurrentDate] = useState('');
@@ -61,7 +61,7 @@ export default function CoinChart({
     isLoading,
     error,
   } = useGetCoinMarketChartQuery({
-    coinId: selectedCoin, 
+    coinId: selectedCoin,
     currency: currencyCode,
     days: String(days),
   });
