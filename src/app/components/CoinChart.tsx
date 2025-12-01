@@ -16,6 +16,7 @@ import formatNumber from '../utils/formatNumber';
 import formatDateGraphs from '../utils/formatDateGraph';
 import PriceChartSkeleton from './PriceChartSkeleton';
 import VolumeChartSkeleton from './VolumeChartSkeleton';
+import { handleRtkQueryError } from '@/app/utils/toastErrorHandler';
 
 type Payload = {
   date: string;
@@ -36,13 +37,9 @@ export default function CoinChart({
   currencySymbol,
   selectedCoin,
 }: CoinChartProps) {
-  // Read timeline ID from URL, default to '1d'
   const searchParams = useSearchParams();
-  // Handle null searchParams in test environment
   const timelineId = searchParams?.get('timeline') || '1d';
 
-  // Map timeline ID to number of days
-  // (Adjust this map based on the IDs used in Timeline.tsx)
   const timelineDaysMap: { [key: string]: number } = {
     '1d': 1,
     '7d': 7,
@@ -50,28 +47,32 @@ export default function CoinChart({
     '1m': 30,
     '3m': 90,
     '1y': 365,
-    max: 0, // Or adjust based on API needs for 'max'
+    max: 0,
   };
-  const days = timelineDaysMap[timelineId] ?? 1; // Default to 1 if ID is unknown
+  const days = timelineDaysMap[timelineId] ?? 1; 
 
   const [currentValue, setCurrentValue] = useState('');
   const [currentDate, setCurrentDate] = useState('');
 
-  // Pass 'days' as string to formatDateGraphs
   const formatTick = (value: string | number) => formatDateGraphs(String(value), String(days));
 
-  // Use RTK Query hooks instead of dispatching actions
   const {
     data: chartData,
     isLoading,
     error,
   } = useGetCoinMarketChartQuery({
-    coinId: selectedCoin, // Changed back from id
+    coinId: selectedCoin, 
     currency: currencyCode,
-    days: String(days), // Keep passing days as string to query hook based on previous type error
+    days: String(days),
   });
 
   const { data: coinDetails } = useGetCoinDetailsQuery(selectedCoin);
+
+  useEffect(() => {
+    if (error) {
+      handleRtkQueryError(error);
+    }
+  }, [error]);
 
   useEffect(() => {
     if (chartData) {
@@ -91,7 +92,6 @@ export default function CoinChart({
     }
   }, [chartData, chartType, currencyCode]);
 
-  // Show loading state while data is being fetched
   if (isLoading || !chartData || (chartType === 'price' && !coinDetails)) {
     return (
       <div
@@ -104,7 +104,11 @@ export default function CoinChart({
   }
 
   if (error) {
-    return <div>Error fetching data</div>;
+    return (
+      <div className="flex w-full flex-wrap gap-4 md:flex-nowrap lg:gap-8">
+        {chartType === 'price' ? <PriceChartSkeleton /> : <VolumeChartSkeleton />}
+      </div>
+    );
   }
 
   const coin = chartData;

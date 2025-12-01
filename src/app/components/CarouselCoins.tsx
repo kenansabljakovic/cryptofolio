@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-//import Autoplay from "embla-carousel-autoplay";
 import { useGetCoinMarketsQuery } from '../services/api';
 import { ChevronUpIcon } from '../icons/ChevronUpIcon';
 import { ChevronDownIcon } from '../icons/ChevronDownIcon';
@@ -15,6 +14,7 @@ import {
 } from '../components/ui/carousel';
 import CarouselCoinsSkeleton from './CarouselCoinsSkeleton';
 import { useCurrencyFromUrl } from '@/hooks/useCurrencyFromUrl';
+import { handleRtkQueryError } from '@/app/utils/toastErrorHandler';
 
 type CarouselCoinsProps = {
   clickedCoin: (value: string) => void;
@@ -47,8 +47,14 @@ export default function CarouselCoins({ clickedCoin, selectedCoin }: CarouselCoi
     };
   }, [api, onSelect]);
 
+  useEffect(() => {
+    if (error) {
+      handleRtkQueryError(error);
+    }
+  }, [error]);
+
   if (isLoading || !data || data.length === 0) return <CarouselCoinsSkeleton />;
-  if (error) return <div>Error loading the data.</div>;
+  if (error) return <CarouselCoinsSkeleton />;
 
   const handleCarousel = (coin: string) => {
     clickedCoin(coin);
