@@ -62,4 +62,17 @@ jest.mock('@/app/services/api', () => {
   };
 });
 
+// Mock Sonner toast library
+jest.mock('sonner', () => ({
+  toast: {
+    success: jest.fn(),
+    error: jest.fn(),
+    info: jest.fn(),
+    warning: jest.fn(),
+    loading: jest.fn(),
+    dismiss: jest.fn(),
+  },
+  Toaster: () => null, // Mock the Toaster component
+}));
+
 // Global mocks - these apply before any test file runs

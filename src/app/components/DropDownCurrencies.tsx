@@ -13,8 +13,8 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import { ScrollArea } from '../components/ui/scroll-area';
 import { useCurrencyFromUrl, useSafeRouter, useSafePathname } from '@/hooks/useCurrencyFromUrl';
+import { useToast } from '@/hooks/useToast';
 
-// Define Currency type and the static list of currencies
 type Currency = {
   symbol: string;
   code: string;
@@ -38,15 +38,14 @@ const currencies: Currency[] = [
 export default function DropDownCurrencies() {
   const [open, setOpen] = React.useState(false);
 
-  // Use safe navigation hooks
   const router = useSafeRouter();
   const pathname = useSafePathname();
 
-  // Use the custom hook to get currency data from URL
   const currentCurrency = useCurrencyFromUrl();
 
+  const { success } = useToast();
+
   const onSelect = (currency: Currency) => {
-    // Use safe hooks
     const searchParamsForURL =
       typeof window !== 'undefined'
         ? new URLSearchParams(window.location.search)
@@ -58,6 +57,8 @@ export default function DropDownCurrencies() {
     const query = search ? `?${search}` : '';
     router.push(`${pathname}${query}`);
     setOpen(false);
+
+    success('Currency updated', `Now showing prices in ${currency.code.toUpperCase()}`);
   };
 
   return (

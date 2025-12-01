@@ -6,12 +6,13 @@ import { useCurrencyFromUrl } from '@/hooks/useCurrencyFromUrl';
 import { useGetCoinMarketPaginatedQuery } from '../services/api';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from './ui/table';
 import CoinsMarketStats from './CoinsMarketStats';
+import { handleRtkQueryError } from '@/app/utils/toastErrorHandler';
+import TableCoinsSkeleton from './TableCoinsSkeleton';
 
 export default function TableCoins() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  // Get currency from URL using the hook
   const { code: currencyCode } = useCurrencyFromUrl();
 
   // Track previous currency to detect changes
@@ -60,6 +61,12 @@ export default function TableCoins() {
     }
   }, [currencyCode]);
 
+  useEffect(() => {
+    if (error) {
+      handleRtkQueryError(error);
+    }
+  }, [error]);
+
   const fetchMoreData = () => {
     // Only fetch more if we're not already fetching and have more data to fetch
     if (!isFetching && coins.length < 300) {
@@ -70,11 +77,7 @@ export default function TableCoins() {
   };
 
   if (error) {
-    return (
-      <div className="p-4 text-red-500" data-testid="table-error">
-        Error fetching data
-      </div>
-    );
+    return <TableCoinsSkeleton />;
   }
 
   return (

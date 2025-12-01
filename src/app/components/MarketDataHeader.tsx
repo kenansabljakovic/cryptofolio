@@ -1,4 +1,5 @@
 'use client';
+import { useEffect } from 'react';
 import { useCurrencyFromUrl } from '@/hooks/useCurrencyFromUrl';
 import { useGetGlobalDataQuery } from '../services/api';
 import { CoinsIcon } from '../icons/CoinsIcon';
@@ -11,17 +12,25 @@ import { Progress } from '../components/ui/progress';
 import MarketDataHeaderSkeleton from './MarketDataHeaderSkeleton';
 import formatNumber from '../../app/utils/formatNumber';
 import getPercentage from '../../app/utils/getPercentage';
+import { handleRtkQueryError } from '@/app/utils/toastErrorHandler';
 
 export default function MarketDataHeader() {
   const { data: globalDataResponse, isLoading, error } = useGetGlobalDataQuery();
   const { symbol, code } = useCurrencyFromUrl();
+
+  // Handle API errors with toast notifications
+  useEffect(() => {
+    if (error) {
+      handleRtkQueryError(error);
+    }
+  }, [error]);
 
   if (isLoading) {
     return <MarketDataHeaderSkeleton />;
   }
 
   if (error) {
-    return <div>Error loading market data</div>;
+    return <MarketDataHeaderSkeleton />;
   }
 
   const data = globalDataResponse?.data;
