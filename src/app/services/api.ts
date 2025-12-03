@@ -99,23 +99,23 @@ interface MarketChartApiResponse {
 export const cryptoApi = createApi({
   reducerPath: 'cryptoApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.coingecko.com/api/v3',
+    baseUrl: '/api/crypto',
   }),
   tagTypes: ['CoinMarkets'],
   endpoints: (builder) => ({
     getGlobalData: builder.query<{ data: GlobalData }, void>({
-      query: () => `/global?x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`,
+      query: () => `/global`,
     }),
     getCoinMarkets: builder.query<CoinMarketData[], string>({
       query: (currency) =>
-        `/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=100&page=1&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`,
+        `/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=100&page=1`,
     }),
     getCoinMarketChart: builder.query<
       CoinChartData,
       { coinId: string; currency: string; days: string }
     >({
       query: ({ coinId, currency, days }) =>
-        `/coins/${coinId}/market_chart?vs_currency=${currency}&days=${days}&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`,
+        `/coins/${coinId}/market_chart?vs_currency=${currency}&days=${days}`,
       transformResponse: (response: MarketChartApiResponse, meta, arg) => {
         return {
           id: arg.coinId,
@@ -126,11 +126,11 @@ export const cryptoApi = createApi({
     }),
     getCoinDetails: builder.query<CoinDetails, string>({
       query: (coinId) =>
-        `/coins/${coinId}?localization=false&tickers=false&market_data=false&community_data=false&developer_data=false&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`,
+        `/coins/${coinId}?localization=false&tickers=false&market_data=false&community_data=false&developer_data=false`,
     }),
     getCoinMarketPaginated: builder.query<CoinMarketData[], { currency: string; page: number }>({
       query: ({ currency, page }) =>
-        `/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=20&page=${page}&sparkline=true&price_change_percentage=1h,24h,7d&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`,
+        `/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=20&page=${page}&sparkline=true&price_change_percentage=1h,24h,7d`,
       // Group queries by currency only to consolidate pages
       serializeQueryArgs: ({ queryArgs }) => queryArgs.currency,
       // Force a re-fetch if page or currency changes
@@ -154,7 +154,7 @@ export const cryptoApi = createApi({
     getCoinPageInfo: builder.query<CoinInfo, string>({
       // Takes coinId string, returns CoinInfo
       query: (coinId) =>
-        `/coins/${coinId}?localization=false&tickers=false&market_data=true&community_data=true&developer_data=false&sparkline=false&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`,
+        `/coins/${coinId}?localization=false&tickers=false&market_data=true&community_data=true&developer_data=false&sparkline=false`,
       // Optional: Add providesTags if this data might be invalidated by other actions
       // providesTags: (result, error, coinId) => [{ type: 'CoinDetail', id: coinId }],
     }),

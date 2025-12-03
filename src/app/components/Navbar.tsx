@@ -68,9 +68,7 @@ export default function Navbar() {
       setIsLoading(true);
       const fetchCryptocurrencies = async () => {
         try {
-          const response = await fetch(
-            `https://api.coingecko.com/api/v3/search?query=${searchQuery}&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`
-          );
+          const response = await fetch(`/api/crypto/search?query=${searchQuery}`);
           const data = await response.json();
           setSearchResults(data.coins);
         } catch (error) {
