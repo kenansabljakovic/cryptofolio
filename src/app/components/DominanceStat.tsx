@@ -7,11 +7,7 @@ interface DominanceStatProps {
   indicatorColor: string;
 }
 
-export default function DominanceStat({
-  icon,
-  percentage,
-  indicatorColor,
-}: DominanceStatProps) {
+export default function DominanceStat({ icon, percentage, indicatorColor }: DominanceStatProps) {
   return (
     <div className="hidden items-center gap-1 lg:flex">
       {icon}
