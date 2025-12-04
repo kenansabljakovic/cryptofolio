@@ -21,7 +21,7 @@ export default function NavbarSkeleton() {
         <div className="flex gap-2 sm:gap-4">
           <Skeleton className="h-9 w-[50px] rounded-md sm:h-10 sm:w-[130px] md:h-11 md:w-[200px] lg:h-12 lg:w-[286px] xl:h-12 xl:w-[356px]" />
           <Skeleton className="h-9 w-[60px] rounded-md sm:h-10 sm:w-[70px] md:h-11 lg:h-12" />
-          <Skeleton className="h-9 w-9 rounded-md sm:h-10 sm:w-10 md:h-11 md:w-11 lg:h-12 lg:w-12" />
+          <Skeleton className="size-9 rounded-md sm:size-10 md:size-11 lg:size-12" />
         </div>
       </nav>
 
