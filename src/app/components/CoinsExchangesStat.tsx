@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface CoinsExchangesStatProps {
   icon: React.ReactNode;
   label: string;
