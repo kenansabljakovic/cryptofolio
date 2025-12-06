@@ -1,4 +1,4 @@
-'use client';
+import React from 'react';
 import { Progress } from './ui/progress';
 
 interface DominanceStatProps {
@@ -7,7 +7,11 @@ interface DominanceStatProps {
   indicatorColor: string;
 }
 
-export default function DominanceStat({ icon, percentage, indicatorColor }: DominanceStatProps) {
+const DominanceStat = React.memo(function DominanceStat({
+  icon,
+  percentage,
+  indicatorColor,
+}: DominanceStatProps) {
   return (
     <div className="hidden items-center gap-1 lg:flex">
       {icon}
@@ -19,4 +23,8 @@ export default function DominanceStat({ icon, percentage, indicatorColor }: Domi
       />
     </div>
   );
-}
+});
+
+DominanceStat.displayName = 'DominanceStat';
+
+export default DominanceStat;

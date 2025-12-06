@@ -4,16 +4,21 @@ import { useCurrencyFromUrl } from '../../hooks/useCurrencyFromUrl';
 import { useGetGlobalDataQuery } from '../services/api';
 import { CoinsIcon } from '../icons/CoinsIcon';
 import { ExchangeIcon } from '../icons/ExchangeIcon';
-import { ChevronUpIcon } from '../icons/ChevronUpIcon';
 import { BitcoinIcon } from '../icons/BitcoinIcon';
 import { EthereumIcon } from '../icons/EthereumIcon';
-import { ChevronDownIcon } from '../icons/ChevronDownIcon';
-import { Progress } from '../components/ui/progress';
 import MarketDataHeaderSkeleton from './MarketDataHeaderSkeleton';
 import DominanceStat from './DominanceStat';
-import formatNumber from '../../app/utils/formatNumber';
+import CoinsExchangesStat from './CoinsExchangesStat';
+import MarketCapStat from './MarketCapStat';
+import VolumeStat from './VolumeStat';
 import getPercentage from '../../app/utils/getPercentage';
 import { handleRtkQueryError } from '../../app/utils/toastErrorHandler';
+
+// Pre-created icon elements to maintain referential equality
+const COINS_ICON = <CoinsIcon />;
+const EXCHANGE_ICON = <ExchangeIcon />;
+const BITCOIN_ICON = <BitcoinIcon />;
+const ETHEREUM_ICON = <EthereumIcon />;
 
 export default function MarketDataHeader() {
   const { data, isLoading, error } = useGetGlobalDataQuery();
@@ -46,65 +51,33 @@ export default function MarketDataHeader() {
 
   return (
     <div className="mx-auto flex w-full justify-center gap-2 bg-[#353570] px-4 py-5 dark:bg-[#1E1932] sm:gap-7 md:gap-8 lg:px-[72px]">
-      <div className="flex items-center gap-1">
-        <CoinsIcon />
-        <span className="text-xs font-medium text-[#D1D1D1]">Coins</span>
-        <span className="text-xs font-medium text-white">
-          {globalMarketStats.active_cryptocurrencies}
-        </span>
-      </div>
-      <div className="flex items-center gap-1">
-        <ExchangeIcon />
-        <span className="text-xs font-medium text-[#D1D1D1]">Exchanges</span>
-        <span className="text-xs font-medium text-white">{globalMarketStats.markets}</span>
-      </div>
-      <div className="flex items-center gap-1">
-        <span className="hidden text-xs font-medium text-[#D1D1D1] sm:inline">Market Cap</span>
-        <div className="flex">
-          <span className="text-xs font-medium text-white">{symbol}</span>
-          <span className="text-xs font-medium text-white">
-            {formatNumber(globalMarketStats.total_market_cap[code])}
-          </span>
-        </div>
-
-        <span className="hidden sm:block">
-          {globalMarketStats.market_cap_change_percentage_24h_usd > 0 ? (
-            <ChevronUpIcon />
-          ) : (
-            <ChevronDownIcon />
-          )}
-        </span>
-
-        <span
-          className={`hidden sm:inline sm:text-xs sm:font-medium ${
-            globalMarketStats.market_cap_change_percentage_24h_usd > 0
-              ? 'text-[#00F0E2]'
-              : 'text-[#FD2263]'
-          }`}
-        >
-          {Math.abs(globalMarketStats.market_cap_change_percentage_24h_usd).toFixed(2)}%
-        </span>
-      </div>
-      <div className="flex items-center gap-1">
-        <div className="flex">
-          <span className="text-xs font-medium text-white">{symbol}</span>
-          <span className="text-xs font-medium text-white">
-            {formatNumber(globalMarketStats.total_volume[code])}
-          </span>
-        </div>
-        <Progress
-          className="hidden sm:block sm:h-[6px] sm:w-[53px] sm:bg-gray-500"
-          value={marketStats.volumePercentage}
-          indicator="bg-white"
-        />
-      </div>
+      <CoinsExchangesStat
+        icon={COINS_ICON}
+        label="Coins"
+        value={globalMarketStats.active_cryptocurrencies}
+      />
+      <CoinsExchangesStat
+        icon={EXCHANGE_ICON}
+        label="Exchanges"
+        value={globalMarketStats.markets}
+      />
+      <MarketCapStat
+        symbol={symbol}
+        value={globalMarketStats.total_market_cap[code]}
+        changePercentage={globalMarketStats.market_cap_change_percentage_24h_usd}
+      />
+      <VolumeStat
+        symbol={symbol}
+        value={globalMarketStats.total_volume[code]}
+        percentage={marketStats.volumePercentage}
+      />
       <DominanceStat
-        icon={<BitcoinIcon />}
+        icon={BITCOIN_ICON}
         percentage={marketStats.btcDominance}
         indicatorColor="bg-[#F7931A]"
       />
       <DominanceStat
-        icon={<EthereumIcon />}
+        icon={ETHEREUM_ICON}
         percentage={marketStats.ethDominance}
         indicatorColor="bg-[#849DFF]"
       />
