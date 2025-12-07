@@ -24,7 +24,9 @@ const MarketCapStat = React.memo(function MarketCapStat({
         <span className="text-xs font-medium text-white">{formatNumber(value)}</span>
       </div>
 
-      <span className="hidden sm:block">{isPositive ? <ChevronUpIcon /> : <ChevronDownIcon />}</span>
+      <span className="hidden sm:block">
+        {isPositive ? <ChevronUpIcon /> : <ChevronDownIcon />}
+      </span>
 
       <span
         className={`hidden sm:inline sm:text-xs sm:font-medium ${

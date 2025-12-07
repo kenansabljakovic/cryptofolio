@@ -8,11 +8,7 @@ interface VolumeStatProps {
   percentage: number;
 }
 
-const VolumeStat = React.memo(function VolumeStat({
-  symbol,
-  value,
-  percentage,
-}: VolumeStatProps) {
+const VolumeStat = React.memo(function VolumeStat({ symbol, value, percentage }: VolumeStatProps) {
   return (
     <div className="flex items-center gap-1">
       <div className="flex">
