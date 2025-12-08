@@ -1,5 +1,5 @@
 'use client';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { Inter } from 'next/font/google';
 import { useCurrencyFromUrl } from '@/hooks/useCurrencyFromUrl';
@@ -28,6 +28,15 @@ export default function SearchResultsList({
 }: SearchResultsListProps) {
   const resultsRef = useRef<HTMLUListElement>(null);
   const { code: currencyCode } = useCurrencyFromUrl();
+
+  useEffect(() => {
+    if (resultsRef.current && selectedIndex >= 0 && selectedIndex < results.length) {
+      const selectedElement = resultsRef.current.children[selectedIndex] as HTMLElement;
+      if (selectedElement) {
+        selectedElement.scrollIntoView({ block: 'nearest' });
+      }
+    }
+  }, [selectedIndex, results.length]);
 
   return (
     <ul ref={resultsRef}>

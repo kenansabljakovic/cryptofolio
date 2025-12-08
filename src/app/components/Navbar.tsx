@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef, KeyboardEvent } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback, KeyboardEvent } from 'react';
 import Link from 'next/link';
 import { Inter } from 'next/font/google';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
@@ -9,11 +9,12 @@ import DropDownCurrencies from './DropDownCurrencies';
 import { CryptofolioLogoIcon } from '../icons/CryptofolioLogoIcon';
 import { HomeIcon } from '../icons/HomeIcon';
 import { PortfolioIcon } from '../icons/PortfolioIcon';
-import { ExchangeIcon } from '../icons/ExchangeIcon';
-import { Input } from '../../app/components/ui/input';
+import { ConverterIcon } from '../icons/ConverterIcon';
+import { Input } from './ui/input';
 import StyledNavbarLink from './StyledNavbarLink';
 import SearchResultsListSkeleton from './SearchResultsListSkeleton';
 import SearchResultsList from './SearchResultsList';
+import { toast } from 'sonner';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -28,25 +29,50 @@ type Cryptocurrency = {
   name: string;
 };
 
-// Refined debounce signature using generic argument tuple
 function debounce<Args extends unknown[]>(
   func: (...args: Args) => void,
   delay: number
-): (...args: Args) => void {
-  let timer: ReturnType<typeof setTimeout>;
-  return function (this: void, ...args: Args) {
-    clearTimeout(timer);
-    timer = setTimeout(() => func(...args), delay);
+): {
+  (...args: Args): void;
+  cancel: () => void;
+} {
+  let timer: ReturnType<typeof setTimeout> | null = null;
+
+  const debouncedFunction = function (this: void, ...args: Args) {
+    if (timer !== null) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      func(...args);
+      timer = null;
+    }, delay);
   };
+
+  debouncedFunction.cancel = () => {
+    if (timer !== null) {
+      clearTimeout(timer);
+      timer = null;
+    }
+  };
+
+  return debouncedFunction;
 }
 
+const getMobileLinkClasses = (isActive: boolean) => {
+  const baseClasses =
+    'flex flex-col items-center justify-center gap-1 px-4 py-2 rounded-lg transition-all';
+  const activeClasses = 'bg-[rgb(120,120,250,0.7)] dark:bg-[#6161D6] text-white';
+  const inactiveClasses =
+    'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300';
+  return `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`;
+};
+
 export default function Navbar() {
+  const [inputValue, setInputValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Cryptocurrency[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const resultsRef = useRef<HTMLUListElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -54,116 +80,160 @@ export default function Navbar() {
   const currencyParam = searchParams?.get('currency');
   const currencyQueryString = currencyParam ? `?currency=${currencyParam}` : '';
 
-  // Define classes for mobile navigation links
-  const mobileLinkClasses = (isActive: boolean) => {
-    const baseClasses =
-      'inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group';
-    const activeClasses = 'text-blue-600 dark:text-blue-500';
-    const inactiveClasses = 'text-gray-500 dark:text-gray-400';
-    return `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`;
-  };
-
   useEffect(() => {
-    if (searchQuery) {
-      setIsLoading(true);
-      const fetchCryptocurrencies = async () => {
-        try {
-          const response = await fetch(`/api/crypto/search?query=${searchQuery}`);
-          const data = await response.json();
-          setSearchResults(data.coins);
-        } catch (error) {
-          console.error('Error fetching cryptocurrency data:', error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-
-      fetchCryptocurrencies();
-    } else {
+    if (!searchQuery) {
       setSearchResults([]);
       setSelectedIndex(-1);
       setIsLoading(false);
+      return;
     }
+
+    const controller = new AbortController();
+    setIsLoading(true);
+
+    fetch(`/api/crypto/search?query=${encodeURIComponent(searchQuery)}`, {
+      signal: controller.signal,
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          const errorMessage = errorData.error || 'Failed to fetch search results';
+
+          if (res.status === 429) {
+            toast.error('Rate limit exceeded', {
+              description: 'Please wait a moment and try again.',
+              duration: 5000,
+            });
+          } else if (res.status === 500) {
+            toast.error('Server error', {
+              description: errorMessage,
+              duration: 5000,
+            });
+          } else {
+            toast.error('Search error', {
+              description: errorMessage,
+              duration: 5000,
+            });
+          }
+
+          throw new Error(errorMessage);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setSearchResults(data.coins ?? []);
+      })
+      .catch((err) => {
+        if (err.name !== 'AbortError') {
+          console.error('Error fetching cryptocurrency data:', err);
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+
+    return () => {
+      controller.abort();
+    };
   }, [searchQuery]);
 
-  const handleSearch = debounce((searchValue: string) => {
-    setSearchQuery(searchValue);
-  }, 300);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  };
-
-  const handleCoinClick = (coinId: string) => {
-    setSearchResults([]);
-    setSearchQuery('');
-    setSelectedIndex(-1);
-    if (inputRef.current) {
-      inputRef.current.value = '';
-    }
-    router.push(`/coin/${coinId}`);
-  };
-
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    const displayedResultsLength = Math.min(searchResults.length, MAX_DISPLAYED_RESULTS);
-
-    if (searchResults.length > 0) {
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        setSelectedIndex((prevIndex) =>
-          prevIndex < displayedResultsLength - 1 ? prevIndex + 1 : 0
-        );
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        setSelectedIndex((prevIndex) =>
-          prevIndex > 0 ? prevIndex - 1 : displayedResultsLength - 1
-        );
-      } else if (e.key === 'Enter' && selectedIndex >= 0) {
-        e.preventDefault();
-        const selectedCoin = searchResults[selectedIndex];
-        if (selectedCoin) {
-          handleCoinClick(selectedCoin.id);
-        }
-      }
-    }
-  };
+  const handleSearch = useMemo(
+    () =>
+      debounce((searchValue: string) => {
+        setSearchQuery(searchValue);
+      }, 300),
+    []
+  );
 
   useEffect(() => {
-    if (
-      resultsRef.current &&
-      selectedIndex >= 0 &&
-      selectedIndex < Math.min(searchResults.length, MAX_DISPLAYED_RESULTS)
-    ) {
-      const selectedElement = resultsRef.current.children[selectedIndex] as HTMLElement;
-      if (selectedElement) {
-        selectedElement.scrollIntoView({ block: 'nearest' });
-      }
-    }
-  }, [selectedIndex, searchResults.length]);
+    return () => {
+      handleSearch.cancel();
+    };
+  }, [handleSearch]);
 
-  useClickAway(dropdownRef, () => {
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setInputValue(value);
+      handleSearch(value);
+    },
+    [handleSearch]
+  );
+
+  const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  }, []);
+
+  const handleCoinClick = useCallback(
+    (coinId: string) => {
+      setSearchResults([]);
+      setSearchQuery('');
+      setInputValue('');
+      setSelectedIndex(-1);
+      router.push(`/coin/${coinId}`);
+    },
+    [router]
+  );
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      const displayedResultsLength = Math.min(searchResults.length, MAX_DISPLAYED_RESULTS);
+
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        handleSearch.cancel();
+        setSearchResults([]);
+        setInputValue('');
+        setSelectedIndex(-1);
+        return;
+      }
+
+      if (searchResults.length > 0) {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          setSelectedIndex((prevIndex) =>
+            prevIndex < displayedResultsLength - 1 ? prevIndex + 1 : 0
+          );
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          setSelectedIndex((prevIndex) =>
+            prevIndex > 0 ? prevIndex - 1 : displayedResultsLength - 1
+          );
+        } else if (e.key === 'Enter' && selectedIndex >= 0) {
+          e.preventDefault();
+          const selectedCoin = searchResults[selectedIndex];
+          if (selectedCoin) {
+            handleCoinClick(selectedCoin.id);
+          }
+        }
+      }
+    },
+    [searchResults, selectedIndex, handleCoinClick, handleSearch]
+  );
+
+  const handleClickAway = useCallback(() => {
+    handleSearch.cancel();
     setSearchResults([]);
+    setInputValue('');
     setSelectedIndex(-1);
-    if (inputRef.current) {
-      inputRef.current.value = '';
-    }
-  });
+  }, [handleSearch]);
+
+  useClickAway(dropdownRef, handleClickAway);
 
   return (
     <div className="w-full bg-white dark:bg-[#13121A]">
       <nav className="mx-auto flex max-w-[1440px] justify-between px-6 py-4 sm:px-[42px] xl:px-[72px]">
-        <div className="flex items-center gap-[10px] font-bold text-white">
-          <Link href={`/${currencyQueryString}`}>
-            <CryptofolioLogoIcon />
-          </Link>
-          <Link href={`/${currencyQueryString}`}>
-            <span
-              className={`${inter.className} hidden py-2 text-[#353570] dark:text-white md:text-lg lg:inline lg:text-xl`}
-            >
-              Cryptofolio
-            </span>
-          </Link>
-        </div>
+        <Link
+          href={`/${currencyQueryString}`}
+          className="flex items-center gap-[10px] font-bold text-white"
+        >
+          <CryptofolioLogoIcon />
+          <span
+            className={`${inter.className} hidden py-2 text-[#353570] dark:text-white md:text-lg lg:inline lg:text-xl`}
+          >
+            Cryptofolio
+          </span>
+        </Link>
         <div className="hidden sm:flex sm:gap-7 lg:gap-14">
           <div className="flex items-center gap-[10px]">
             <div className="rounded-md border border-[#7878FA] bg-[rgb(120,120,250,0.7)] p-1.5 sm:border-none sm:bg-transparent">
@@ -181,17 +251,17 @@ export default function Navbar() {
         <div className="flex gap-2 sm:gap-4">
           <form onSubmit={handleSubmit} className="group">
             <Input
-              ref={inputRef}
+              value={inputValue}
               className={`${
                 inter.className
               } transition-all duration-300 ease-in-out sm:transition-none ${
-                searchResults.length > 0 ? 'rounded-b-none' : 'rounded-b-md'
+                isLoading || searchResults.length > 0 ? 'rounded-b-none' : 'rounded-b-md'
               } size-[36px] pl-12 text-base placeholder:text-transparent focus:w-[149px] sm:h-10 sm:w-[130px] sm:text-sm sm:placeholder:text-sm sm:placeholder:font-normal sm:placeholder:text-[#424286] sm:placeholder:text-opacity-80 sm:focus:w-[130px] sm:dark:placeholder:text-[#D1D1D1] md:h-11 md:w-[200px] md:focus:w-[200px] lg:h-12 lg:w-[286px] lg:focus:w-[286px] xl:h-12 xl:w-[356px] xl:focus:w-[356px]`}
               placeholder="Search..."
-              onChange={(e) => handleSearch(e.target.value)}
+              onChange={handleInputChange}
               onKeyDown={handleKeyDown}
             />
-            {searchResults.length > 0 && (
+            {(isLoading || searchResults.length > 0) && (
               <div
                 ref={dropdownRef}
                 className="absolute z-10 w-[149px] rounded-b-md border-x border-b border-white/10 bg-white p-2 dark:bg-[#191925] sm:w-[130px] md:w-[200px] lg:w-[286px] xl:w-[356px]"
@@ -212,23 +282,24 @@ export default function Navbar() {
           <ThemeSwitch />
         </div>
       </nav>
-      {/* Mobile Bottom Navigation Bar */}
-      <div className="fixed bottom-0 left-0 z-50 grid h-16 w-full grid-cols-3 border-t border-gray-200 bg-white dark:border-gray-600 dark:bg-[#13121A] sm:hidden">
-        {/* Ensure mobile links preserve currency */}
-        <Link href={`/${currencyQueryString}`} className={mobileLinkClasses(pathname === '/')}>
+      <div className="fixed bottom-0 left-0 z-50 flex h-20 w-full items-center justify-around border-t border-gray-200 bg-white/80 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3 backdrop-blur-xl dark:border-transparent dark:bg-[#1A1A2E]/30 sm:hidden">
+        <Link href={`/${currencyQueryString}`} className={getMobileLinkClasses(pathname === '/')}>
           <HomeIcon isActive={pathname === '/'} />
-        </Link>
-        <Link
-          href={`/portfolio${currencyQueryString}`}
-          className={mobileLinkClasses(pathname === '/portfolio')}
-        >
-          <PortfolioIcon isActive={pathname === '/portfolio'} />
+          <span className="text-xs font-medium">Overview</span>
         </Link>
         <Link
           href={`/converter${currencyQueryString}`}
-          className={mobileLinkClasses(pathname === '/converter')}
+          className={getMobileLinkClasses(pathname === '/converter')}
         >
-          <ExchangeIcon />
+          <ConverterIcon isActive={pathname === '/converter'} />
+          <span className="text-xs font-medium">Converter</span>
+        </Link>
+        <Link
+          href={`/portfolio${currencyQueryString}`}
+          className={getMobileLinkClasses(pathname === '/portfolio')}
+        >
+          <PortfolioIcon isActive={pathname === '/portfolio'} />
+          <span className="text-xs font-medium">Portfolio</span>
         </Link>
       </div>
     </div>
