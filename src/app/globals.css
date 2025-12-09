@@ -13,6 +13,25 @@ body {
   min-height: -webkit-fill-available;
 }
 
+@supports (height: 100dvh) {
+  html,
+  body {
+    min-height: 100dvh;
+  }
+}
+
+@media (max-width: 639px) {
+  :root {
+    --mobile-nav-height: 68px;
+    --mobile-nav-safe: env(safe-area-inset-bottom, 0px);
+    --mobile-nav-total-height: calc(var(--mobile-nav-height) + var(--mobile-nav-safe));
+  }
+
+  body {
+    padding-bottom: var(--mobile-nav-total-height);
+  }
+}
+
 /* Prevent overscroll bounce on iOS */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   html,
