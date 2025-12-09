@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Space_Grotesk } from 'next/font/google';
 import { Suspense } from 'react';
 import './globals.css';
@@ -16,6 +16,12 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: 'Cryptofolio - Cryptocurrency Tracker',
   description: 'Track cryptocurrency prices, market caps, and portfolio performance',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({
