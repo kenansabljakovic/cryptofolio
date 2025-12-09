@@ -2,14 +2,11 @@
 import { useState, useEffect, useRef, useMemo, useCallback, KeyboardEvent } from 'react';
 import Link from 'next/link';
 import { Inter } from 'next/font/google';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useClickAway } from 'react-use';
 import ThemeSwitch from './ThemeSwitch';
 import DropDownCurrencies from './DropDownCurrencies';
 import { CryptofolioLogoIcon } from '../icons/CryptofolioLogoIcon';
-import { HomeIcon } from '../icons/HomeIcon';
-import { PortfolioIcon } from '../icons/PortfolioIcon';
-import { ConverterIcon } from '../icons/ConverterIcon';
 import { Input } from './ui/input';
 import StyledNavbarLink from './StyledNavbarLink';
 import SearchResultsListSkeleton from './SearchResultsListSkeleton';
@@ -58,16 +55,6 @@ function debounce<Args extends unknown[]>(
   return debouncedFunction;
 }
 
-const getMobileLinkClasses = (isActive: boolean) => {
-  const baseClasses =
-    'flex flex-col items-center justify-center gap-1 px-4 py-2 rounded-lg transition-all';
-  const activeClasses =
-    'rounded-md border border-[#7878FA] bg-[rgb(120,120,250,0.7)] dark:bg-[#6161D6] text-white';
-  const inactiveClasses =
-    'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300';
-  return `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`;
-};
-
 export default function Navbar() {
   const [inputValue, setInputValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -76,7 +63,6 @@ export default function Navbar() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const currencyParam = searchParams?.get('currency');
   const currencyQueryString = currencyParam ? `?currency=${currencyParam}` : '';
@@ -283,26 +269,6 @@ export default function Navbar() {
           <ThemeSwitch />
         </div>
       </nav>
-      <div className="fixed inset-x-0 bottom-0 z-50 flex w-full transform-gpu items-center justify-around border-t border-gray-200 bg-white/70 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-xl will-change-transform dark:border-gray-800/50 dark:bg-[#13121A]/70 sm:hidden">
-        <Link href={`/${currencyQueryString}`} className={getMobileLinkClasses(pathname === '/')}>
-          <HomeIcon isActive={pathname === '/'} />
-          <span className="text-xs font-medium">Overview</span>
-        </Link>
-        <Link
-          href={`/converter${currencyQueryString}`}
-          className={getMobileLinkClasses(pathname === '/converter')}
-        >
-          <ConverterIcon isActive={pathname === '/converter'} />
-          <span className="text-xs font-medium">Converter</span>
-        </Link>
-        <Link
-          href={`/portfolio${currencyQueryString}`}
-          className={getMobileLinkClasses(pathname === '/portfolio')}
-        >
-          <PortfolioIcon isActive={pathname === '/portfolio'} />
-          <span className="text-xs font-medium">Portfolio</span>
-        </Link>
-      </div>
     </div>
   );
 }

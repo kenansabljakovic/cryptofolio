@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import './globals.css';
 import Navbar from './components/Navbar';
 import NavbarSkeleton from './components/NavbarSkeleton';
+import MobileNavbar from './components/MobileNavbar';
 import MarketDataHeader from './components/MarketDataHeader';
 import { Providers } from './providers';
 
@@ -40,6 +41,9 @@ export default function RootLayout({
             </Suspense>
           </header>
           {children}
+          <Suspense fallback={null}>
+            <MobileNavbar />
+          </Suspense>
         </Providers>
       </body>
     </html>
