@@ -1,5 +1,7 @@
 'use client';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { HomeIcon } from '../icons/HomeIcon';
 import { PortfolioIcon } from '../icons/PortfolioIcon';
@@ -16,16 +18,21 @@ const getMobileLinkClasses = (isActive: boolean) => {
 };
 
 export default function MobileNavbar() {
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currencyParam = searchParams?.get('currency');
   const currencyQueryString = currencyParam ? `?currency=${currencyParam}` : '';
 
-  return (
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const navbar = (
     <nav
-      className="fixed inset-x-0 bottom-0 z-[9999] flex h-[var(--mobile-nav-total-height,72px)] w-full items-center justify-around border-t border-gray-200 bg-white/95 px-4 pt-3 backdrop-blur-xl dark:border-gray-800/50 dark:bg-[#13121A]/95 sm:hidden"
+      className="fixed inset-x-0 bottom-0 z-[9999] flex w-full items-center justify-around border-t border-gray-200 bg-white/95 px-4 pt-3 backdrop-blur-xl dark:border-gray-800/50 dark:bg-[#13121A]/95 sm:hidden"
       style={{
-        paddingBottom: 'var(--mobile-nav-safe, env(safe-area-inset-bottom))',
+        paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))',
       }}
     >
       <Link href={`/${currencyQueryString}`} className={getMobileLinkClasses(pathname === '/')}>
@@ -48,4 +55,13 @@ export default function MobileNavbar() {
       </Link>
     </nav>
   );
+
+  // Use portal to render directly into document.body, bypassing any
+  // parent transforms/overflow from NextUIProvider or other wrappers
+  // that break position:fixed on iOS Safari
+  if (!mounted) {
+    return null;
+  }
+
+  return createPortal(navbar, document.body);
 }
