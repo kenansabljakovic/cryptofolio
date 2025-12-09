@@ -23,7 +23,7 @@ export default function MobileNavbar() {
 
   return (
     <nav
-      className="fixed left-0 right-0 bottom-0 z-[9999] flex h-[var(--mobile-nav-total-height,72px)] w-full max-w-full items-center justify-around border-t border-gray-200 bg-white/95 px-4 pt-3 backdrop-blur-xl dark:border-gray-800/50 dark:bg-[#13121A]/95 sm:hidden"
+      className="fixed inset-x-0 bottom-0 z-[9999] flex h-[var(--mobile-nav-total-height,72px)] w-full items-center justify-around border-t border-gray-200 bg-white/95 px-4 pt-3 backdrop-blur-xl dark:border-gray-800/50 dark:bg-[#13121A]/95 sm:hidden"
       style={{
         bottom: 'var(--mobile-nav-safe, env(safe-area-inset-bottom))',
         paddingBottom: 'var(--mobile-nav-safe, env(safe-area-inset-bottom))',
