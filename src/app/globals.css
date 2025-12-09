@@ -2,10 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-/* iOS Safari safe area support for fixed bottom navigation */
+/* Ensure proper touch behavior on iOS */
+html {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent fixed elements from shifting on iOS during scroll */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
+  html,
   body {
-    padding-bottom: env(safe-area-inset-bottom);
+    overscroll-behavior-y: none;
   }
 }
 

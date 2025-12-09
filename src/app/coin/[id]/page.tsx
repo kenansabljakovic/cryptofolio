@@ -28,7 +28,7 @@ export default function CoinPage({ params }: CoinPageProps) {
   if (error) return <CoinPageSkeleton />;
 
   return (
-    <main className="mx-auto mt-5 max-w-[1440px] px-[24px] pb-10 sm:mt-10 lg:px-[36px] xl:px-[72px]">
+    <main className="mx-auto mt-5 max-w-[1440px] px-[24px] pb-24 sm:mt-10 sm:pb-10 lg:px-[36px] xl:px-[72px]">
       <div className="flex w-full flex-wrap gap-5 sm:gap-8 lg:flex-nowrap">
         <CoinPriceInfo data={data} currencyCode={currencyCode} currencySymbol={currencySymbol} />
         <CoinDescriptionLinks data={data} />

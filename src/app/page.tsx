@@ -16,7 +16,7 @@ export default function Home() {
   const { selectedCoin, setSelectedCoin } = useSelectedCoinFromUrl();
 
   return (
-    <main className="pb-10">
+    <main className="pb-24 sm:pb-10">
       <Suspense fallback={<NavHomeSkeleton />}>
         <NavHome />
       </Suspense>

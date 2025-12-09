@@ -282,7 +282,7 @@ export default function Navbar() {
           <ThemeSwitch />
         </div>
       </nav>
-      <div className="fixed bottom-0 left-0 z-50 flex w-full items-center justify-around border-t border-gray-200 bg-white/80 px-4 pb-[calc(0.25rem+env(safe-area-inset-bottom))] pt-3 backdrop-blur-xl dark:border-transparent dark:bg-[#1A1A2E]/30 sm:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-50 flex w-full transform-gpu items-center justify-around border-t border-gray-200 bg-white/70 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-xl will-change-transform dark:border-gray-800/50 dark:bg-[#13121A]/70 sm:hidden">
         <Link href={`/${currencyQueryString}`} className={getMobileLinkClasses(pathname === '/')}>
           <HomeIcon isActive={pathname === '/'} />
           <span className="text-xs font-medium">Overview</span>
