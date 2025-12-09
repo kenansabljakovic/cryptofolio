@@ -26,6 +26,8 @@ export default function MobileNavbar() {
       className="fixed inset-x-0 bottom-0 z-[9999] flex w-full items-center justify-around border-t border-gray-200 bg-white/95 px-4 pt-3 backdrop-blur-xl dark:border-gray-800/50 dark:bg-[#13121A]/95 sm:hidden"
       style={{
         paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))',
+        WebkitTransform: 'translate3d(0, 0, 0)',
+        transform: 'translate3d(0, 0, 0)',
       }}
     >
       <Link href={`/${currencyQueryString}`} className={getMobileLinkClasses(pathname === '/')}>
