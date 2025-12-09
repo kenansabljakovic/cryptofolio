@@ -20,13 +20,13 @@ body {
   }
 }
 
-@media (max-width: 639px) {
-  :root {
-    --mobile-nav-height: 68px;
-    --mobile-nav-safe: env(safe-area-inset-bottom, 0px);
-    --mobile-nav-total-height: calc(var(--mobile-nav-height) + var(--mobile-nav-safe));
-  }
+:root {
+  --mobile-nav-height: 68px;
+  --mobile-nav-safe: env(safe-area-inset-bottom, 0px);
+  --mobile-nav-total-height: calc(var(--mobile-nav-height) + var(--mobile-nav-safe));
+}
 
+@media (max-width: 639px) {
   body {
     padding-bottom: var(--mobile-nav-total-height);
   }
