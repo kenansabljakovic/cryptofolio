@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { HomeIcon } from '../icons/HomeIcon';
 import { PortfolioIcon } from '../icons/PortfolioIcon';
@@ -16,15 +17,38 @@ const getMobileLinkClasses = (isActive: boolean) => {
 };
 
 export default function MobileNavbar() {
+  const [visualBottomOffset, setVisualBottomOffset] = useState(0);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currencyParam = searchParams?.get('currency');
   const currencyQueryString = currencyParam ? `?currency=${currencyParam}` : '';
 
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    const updateOffset = () => {
+      const offset = Math.max(0, window.innerHeight - (viewport.height + viewport.offsetTop));
+      setVisualBottomOffset(offset);
+    };
+
+    updateOffset();
+    viewport.addEventListener('resize', updateOffset);
+    viewport.addEventListener('scroll', updateOffset);
+    window.addEventListener('orientationchange', updateOffset);
+
+    return () => {
+      viewport.removeEventListener('resize', updateOffset);
+      viewport.removeEventListener('scroll', updateOffset);
+      window.removeEventListener('orientationchange', updateOffset);
+    };
+  }, []);
+
   return (
     <nav
       className="fixed inset-x-0 bottom-0 z-[9999] flex h-[var(--mobile-nav-total-height,72px)] w-full items-center justify-around border-t border-gray-200 bg-white/95 px-4 pt-3 backdrop-blur-xl dark:border-gray-800/50 dark:bg-[#13121A]/95 sm:hidden"
       style={{
+        bottom: `calc(${visualBottomOffset}px + var(--mobile-nav-safe, env(safe-area-inset-bottom)))`,
         paddingBottom: 'var(--mobile-nav-safe, env(safe-area-inset-bottom))',
         WebkitTransform: 'translateZ(0)',
         transform: 'translateZ(0)',
