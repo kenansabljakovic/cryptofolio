@@ -2,15 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* iOS Safari height and scroll fixes */
-html {
-  height: 100%;
-  height: -webkit-fill-available;
-}
-
+/* Base document sizing tuned for iOS Safari dynamic viewport */
+html,
 body {
-  min-height: 100%;
-  min-height: -webkit-fill-available;
+  height: 100%;
+  min-height: 100vh;
 }
 
 @supports (height: 100dvh) {
@@ -18,6 +14,11 @@ body {
   body {
     min-height: 100dvh;
   }
+}
+
+body {
+  position: relative;
+  overflow-x: hidden;
 }
 
 :root {
