@@ -25,7 +25,16 @@ export default function NavbarSkeleton() {
         </div>
       </nav>
 
-      <div className="fixed bottom-0 left-0 z-50 grid h-16 w-full grid-cols-3 border-t border-gray-200 bg-white dark:border-gray-600 dark:bg-[#13121A] sm:hidden">
+      <div
+        className="fixed inset-x-0 bottom-0 z-[9999] grid w-full grid-cols-3 border-t border-gray-200 bg-white/95 px-4 pt-3 backdrop-blur-xl dark:border-gray-800/50 dark:bg-[#13121A]/95 sm:hidden"
+        style={{
+          paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))',
+          height: 'calc(var(--navbar-height, 68px) + env(safe-area-inset-bottom, 0px))',
+          transform: 'translate3d(0, var(--mobile-navbar-offset, 0px), 0)',
+          WebkitTransform: 'translate3d(0, var(--mobile-navbar-offset, 0px), 0)',
+          willChange: 'transform',
+        }}
+      >
         <div className="inline-flex flex-col items-center justify-center px-5">
           <Skeleton className="size-6 rounded-md" />
           <Skeleton className="mt-1 h-3 w-10" />

@@ -28,14 +28,42 @@ export default function MobileNavbar() {
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    const updateMobileNavbarOffset = () => {
+      if (typeof window === 'undefined' || !window.visualViewport) {
+        document.documentElement.style.setProperty('--mobile-navbar-offset', '0px');
+        return;
+      }
+
+      const { height, offsetTop } = window.visualViewport;
+      const layoutViewportHeight = window.innerHeight || height;
+      const extraVisibleSpace = height + offsetTop - layoutViewportHeight;
+      const offset = Math.max(0, Math.round(extraVisibleSpace));
+
+      document.documentElement.style.setProperty('--mobile-navbar-offset', `${offset}px`);
+    };
+
+    updateMobileNavbarOffset();
+
+    window.visualViewport?.addEventListener('resize', updateMobileNavbarOffset);
+    window.visualViewport?.addEventListener('scroll', updateMobileNavbarOffset);
+    window.addEventListener('orientationchange', updateMobileNavbarOffset);
+
+    return () => {
+      window.visualViewport?.removeEventListener('resize', updateMobileNavbarOffset);
+      window.visualViewport?.removeEventListener('scroll', updateMobileNavbarOffset);
+      window.removeEventListener('orientationchange', updateMobileNavbarOffset);
+    };
+  }, []);
+
   const navbar = (
     <nav
       data-mobile-navbar
       className="fixed inset-x-0 bottom-0 z-[9999] flex w-full items-center justify-around border-t border-gray-200 bg-white/95 px-4 pt-3 backdrop-blur-xl dark:border-gray-800/50 dark:bg-[#13121A]/95 sm:hidden"
       style={{
         paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))',
-        transform: 'translateZ(0)',
-        WebkitTransform: 'translateZ(0)',
+        transform: 'translate3d(0, var(--mobile-navbar-offset, 0px), 0)',
+        WebkitTransform: 'translate3d(0, var(--mobile-navbar-offset, 0px), 0)',
         willChange: 'transform',
         height: 'calc(var(--navbar-height, 68px) + env(safe-area-inset-bottom, 0px))',
       }}
