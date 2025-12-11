@@ -5,7 +5,8 @@
 /* CSS Custom Properties for Mobile Navbar */
 :root {
   --navbar-height: 68px;
-  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, constant(safe-area-inset-bottom, 0px));
+  --mobile-navbar-offset: 0px;
   --navbar-total-height: calc(var(--navbar-height) + var(--safe-area-bottom));
 }
 
@@ -46,7 +47,7 @@ body {
 /* Mobile navbar spacing - ensures content doesn't scroll behind fixed navbar */
 @media (max-width: 639px) {
   body {
-    padding-bottom: var(--navbar-total-height);
+    padding-bottom: calc(var(--navbar-total-height) + var(--mobile-navbar-offset));
   }
 }
 
