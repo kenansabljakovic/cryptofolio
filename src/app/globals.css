@@ -2,25 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CSS Custom Properties for Mobile Navbar */
-:root {
-  --navbar-height: 68px;
-  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
-  --navbar-total-height: calc(var(--navbar-height) + var(--safe-area-bottom));
-}
-
-/* iOS Safari viewport fixes */
+/* iOS Safari viewport and scroll fixes */
 html {
   height: 100%;
-  /* Support for dynamic viewport height on modern browsers */
   min-height: 100vh;
   min-height: 100dvh;
+  overflow-x: hidden;
 }
 
 body {
   min-height: 100%;
   min-height: 100vh;
   min-height: 100dvh;
+  overflow-x: hidden;
+  position: relative;
 }
 
 /* iOS-specific fixes using feature detection */
@@ -34,19 +29,28 @@ body {
     min-height: -webkit-fill-available;
   }
   
-  /* Additional fixed positioning optimization for iOS */
+  /* Force GPU acceleration and prevent rendering issues on iOS */
   [data-mobile-navbar] {
+    position: -webkit-sticky;
+    position: sticky;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    -webkit-perspective: 1000;
-    perspective: 1000;
+    -webkit-perspective: 1000px;
+    perspective: 1000px;
+    -webkit-transform: translateZ(0);
   }
 }
 
-/* Mobile navbar spacing - ensures content doesn't scroll behind fixed navbar */
+/* Prevent content from scrolling behind navbar on mobile */
 @media (max-width: 639px) {
   body {
-    padding-bottom: var(--navbar-total-height);
+    /* Inline style in layout.tsx takes precedence, this is fallback */
+    padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+  }
+  
+  /* Ensure main content respects the padding */
+  main {
+    position: relative;
   }
 }
 
