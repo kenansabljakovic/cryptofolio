@@ -28,13 +28,63 @@ export default function MobileNavbar() {
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const setOffset = (value: number) => {
+      document.documentElement.style.setProperty('--mobile-navbar-offset', `${value}px`);
+    };
+
+    const computeOffset = () => {
+      if (!window.visualViewport) {
+        setOffset(0);
+        return;
+      }
+
+      const { height, offsetTop } = window.visualViewport;
+      const layoutViewportHeight = window.innerHeight || height;
+      const extraVisibleSpace = height + offsetTop - layoutViewportHeight;
+      const offset = Math.max(0, Math.round(extraVisibleSpace));
+
+      setOffset(offset);
+    };
+
+    let rafId: number | null = null;
+    const onViewportChange = () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      rafId = requestAnimationFrame(computeOffset);
+    };
+
+    computeOffset();
+    window.visualViewport?.addEventListener('resize', onViewportChange);
+    window.visualViewport?.addEventListener('scroll', onViewportChange);
+    window.addEventListener('orientationchange', computeOffset);
+
+    return () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      window.visualViewport?.removeEventListener('resize', onViewportChange);
+      window.visualViewport?.removeEventListener('scroll', onViewportChange);
+      window.removeEventListener('orientationchange', computeOffset);
+      setOffset(0);
+    };
+  }, []);
+
   const navbar = (
     <nav
       data-mobile-navbar
       className="fixed inset-x-0 bottom-0 z-[9999] flex w-full items-center justify-around border-t border-gray-200 bg-white/95 px-4 pt-3 backdrop-blur-xl dark:border-gray-800/50 dark:bg-[#13121A]/95 sm:hidden"
       style={{
-        paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))',
-        height: 'calc(var(--navbar-height, 68px) + env(safe-area-inset-bottom, 0px))',
+        paddingBottom:
+          'max(0.75rem, env(safe-area-inset-bottom, constant(safe-area-inset-bottom, 0px)))',
+        transform: 'translate3d(0, var(--mobile-navbar-offset, 0px), 0)',
+        WebkitTransform: 'translate3d(0, var(--mobile-navbar-offset, 0px), 0)',
+        willChange: 'transform',
+        height:
+          'calc(var(--navbar-height, 68px) + env(safe-area-inset-bottom, constant(safe-area-inset-bottom, 0px)))',
       }}
     >
       <Link href={`/${currencyQueryString}`} className={getMobileLinkClasses(pathname === '/')}>
