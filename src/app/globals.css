@@ -44,8 +44,7 @@ body {
 /* Prevent content from scrolling behind navbar on mobile */
 @media (max-width: 639px) {
   body {
-    /* Inline style in layout.tsx takes precedence, this is fallback */
-    padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(85px + env(safe-area-inset-bottom, 0px));
   }
   
   /* Ensure main content respects the padding */

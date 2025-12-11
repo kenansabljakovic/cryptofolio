@@ -32,12 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${spaceGrotesk.className} bg-[#F3F5F9] dark:bg-[#13121A]`}
-        style={{
-          paddingBottom: 'calc(68px + env(safe-area-inset-bottom, 0px))',
-        }}
-      >
+      <body className={`${spaceGrotesk.className} bg-[#F3F5F9] dark:bg-[#13121A]`}>
         <Providers>
           <header>
             <MarketDataHeader />

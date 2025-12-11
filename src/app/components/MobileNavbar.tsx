@@ -1,7 +1,6 @@
 'use client';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { HomeIcon } from '../icons/HomeIcon';
 import { PortfolioIcon } from '../icons/PortfolioIcon';
@@ -65,12 +64,9 @@ export default function MobileNavbar() {
     </nav>
   );
 
-  // Use portal to render directly into document.body, bypassing any
-  // parent transforms/overflow from NextUIProvider or other wrappers
-  // that break position:fixed on iOS Safari
   if (!mounted) {
     return null;
   }
 
-  return createPortal(navbar, document.body);
+  return navbar;
 }
