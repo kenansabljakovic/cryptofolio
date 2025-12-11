@@ -30,9 +30,6 @@ export default function NavbarSkeleton() {
         style={{
           paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))',
           height: 'calc(var(--navbar-height, 68px) + env(safe-area-inset-bottom, 0px))',
-          transform: 'translate3d(0, var(--mobile-navbar-offset, 0px), 0)',
-          WebkitTransform: 'translate3d(0, var(--mobile-navbar-offset, 0px), 0)',
-          willChange: 'transform',
         }}
       >
         <div className="inline-flex flex-col items-center justify-center px-5">
