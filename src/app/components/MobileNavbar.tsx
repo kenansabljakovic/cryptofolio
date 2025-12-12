@@ -31,22 +31,31 @@ export default function MobileNavbar() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const setOffset = (value: number) => {
-      document.documentElement.style.setProperty('--mobile-navbar-offset', `${value}px`);
+    const setOffsets = (offset: number) => {
+      document.documentElement.style.setProperty('--mobile-navbar-offset', `${offset}px`);
+      // Only add extra padding when the navbar is translated UP (negative offset).
+      // When translated down, baseline navbar height padding is enough.
+      const paddingOffset = Math.max(0, -offset);
+      document.documentElement.style.setProperty(
+        '--mobile-navbar-padding-offset',
+        `${paddingOffset}px`,
+      );
     };
 
     const computeOffset = () => {
-      if (!window.visualViewport) {
-        setOffset(0);
+      const vv = window.visualViewport;
+      if (!vv) {
+        setOffsets(0);
         return;
       }
 
-      const { height, offsetTop } = window.visualViewport;
-      const layoutViewportHeight = window.innerHeight || height;
-      const extraVisibleSpace = height + offsetTop - layoutViewportHeight;
-      const offset = Math.max(0, Math.round(extraVisibleSpace));
+      const layoutViewportHeight = window.innerHeight || vv.height;
+      // Signed delta between visual and layout viewport bottoms.
+      // Positive => visual bottom lower (toolbar hidden) => translate DOWN.
+      // Negative => visual bottom higher (toolbar shown) => translate UP.
+      const delta = Math.round(vv.height + vv.offsetTop - layoutViewportHeight);
 
-      setOffset(offset);
+      setOffsets(delta);
     };
 
     let rafId: number | null = null;
@@ -69,7 +78,7 @@ export default function MobileNavbar() {
       window.visualViewport?.removeEventListener('resize', onViewportChange);
       window.visualViewport?.removeEventListener('scroll', onViewportChange);
       window.removeEventListener('orientationchange', computeOffset);
-      setOffset(0);
+      setOffsets(0);
     };
   }, []);
 
