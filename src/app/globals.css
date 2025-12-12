@@ -27,8 +27,7 @@ body {
 
 /* App shell uses dynamic viewport height on mobile */
 #app-shell {
-  height: 100vh;
-  height: 100dvh;
+  height: calc(var(--app-vh, 1vh) * 100);
 }
 
 /* iOS-specific fixes using feature detection */
@@ -45,7 +44,7 @@ body {
   #app-shell {
     height: -webkit-fill-available;
   }
-  
+
   /* Additional fixed positioning optimization for iOS */
   [data-mobile-navbar] {
     -webkit-backface-visibility: hidden;
@@ -55,6 +54,21 @@ body {
     /* iOS Safari + backdrop-filter on fixed elements can jitter while scrolling */
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+  }
+}
+
+@supports (height: 100dvh) {
+  #app-shell {
+    height: 100dvh;
+  }
+}
+
+/* Lock page scrolling to #app-scroll on mobile */
+@media (max-width: 639px) {
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
   }
 }
 
