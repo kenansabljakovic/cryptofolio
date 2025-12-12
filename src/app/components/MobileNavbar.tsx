@@ -38,7 +38,7 @@ export default function MobileNavbar() {
       const paddingOffset = Math.max(0, -offset);
       document.documentElement.style.setProperty(
         '--mobile-navbar-padding-offset',
-        `${paddingOffset}px`,
+        `${paddingOffset}px`
       );
     };
 
