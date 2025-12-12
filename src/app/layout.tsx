@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import NavbarSkeleton from './components/NavbarSkeleton';
 import MobileNavbar from './components/MobileNavbar';
 import MarketDataHeader from './components/MarketDataHeader';
+import ViewportHeightFix from './components/ViewportHeightFix';
 import { Providers } from './providers';
 
 const spaceGrotesk = Space_Grotesk({
@@ -34,6 +35,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${spaceGrotesk.className} bg-[#F3F5F9] dark:bg-[#13121A]`}>
         <Providers>
+          <ViewportHeightFix />
           <div
             id="app-shell"
             className="relative flex h-dvh min-h-dvh flex-col sm:h-screen sm:min-h-screen"
