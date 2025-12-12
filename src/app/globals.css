@@ -25,6 +25,12 @@ body {
   min-height: 100dvh;
 }
 
+/* App shell uses dynamic viewport height on mobile */
+#app-shell {
+  height: 100vh;
+  height: 100dvh;
+}
+
 /* iOS-specific fixes using feature detection */
 @supports (-webkit-touch-callout: none) {
   /* iOS Safari only */
@@ -34,6 +40,10 @@ body {
   
   body {
     min-height: -webkit-fill-available;
+  }
+
+  #app-shell {
+    height: -webkit-fill-available;
   }
   
   /* Additional fixed positioning optimization for iOS */
@@ -48,12 +58,7 @@ body {
   }
 }
 
-/* Mobile navbar spacing - ensures content doesn't scroll behind fixed navbar */
-@media (max-width: 639px) {
-  body {
-    padding-bottom: var(--navbar-total-height);
-  }
-}
+/* Mobile navbar spacing is handled by #app-scroll padding */
 
 @layer components {
   [data-sonner-toast] {

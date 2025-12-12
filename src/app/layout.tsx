@@ -34,16 +34,26 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${spaceGrotesk.className} bg-[#F3F5F9] dark:bg-[#13121A]`}>
         <Providers>
-          <header>
-            <MarketDataHeader />
-            <Suspense fallback={<NavbarSkeleton />}>
-              <Navbar />
+          <div
+            id="app-shell"
+            className="relative flex h-[100dvh] min-h-[100dvh] flex-col sm:h-screen sm:min-h-screen"
+          >
+            <div
+              id="app-scroll"
+              className="flex-1 min-h-0 overflow-y-auto overscroll-contain pb-[var(--navbar-total-height)] sm:pb-0"
+            >
+              <header>
+                <MarketDataHeader />
+                <Suspense fallback={<NavbarSkeleton />}>
+                  <Navbar />
+                </Suspense>
+              </header>
+              {children}
+            </div>
+            <Suspense fallback={null}>
+              <MobileNavbar />
             </Suspense>
-          </header>
-          {children}
-          <Suspense fallback={null}>
-            <MobileNavbar />
-          </Suspense>
+          </div>
         </Providers>
       </body>
     </html>
