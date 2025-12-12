@@ -7,6 +7,7 @@
   --navbar-height: 68px;
   --safe-area-bottom: env(safe-area-inset-bottom, constant(safe-area-inset-bottom, 0px));
   --mobile-navbar-offset: 0px;
+  --mobile-navbar-padding-offset: 0px;
   --navbar-total-height: calc(var(--navbar-height) + var(--safe-area-bottom));
 }
 
@@ -24,6 +25,12 @@ body {
   min-height: 100dvh;
 }
 
+/* App shell uses dynamic viewport height on mobile */
+#app-shell {
+  height: 100vh;
+  height: 100dvh;
+}
+
 /* iOS-specific fixes using feature detection */
 @supports (-webkit-touch-callout: none) {
   /* iOS Safari only */
@@ -34,6 +41,10 @@ body {
   body {
     min-height: -webkit-fill-available;
   }
+
+  #app-shell {
+    height: -webkit-fill-available;
+  }
   
   /* Additional fixed positioning optimization for iOS */
   [data-mobile-navbar] {
@@ -41,15 +52,13 @@ body {
     backface-visibility: hidden;
     -webkit-perspective: 1000;
     perspective: 1000;
+    /* iOS Safari + backdrop-filter on fixed elements can jitter while scrolling */
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 }
 
-/* Mobile navbar spacing - ensures content doesn't scroll behind fixed navbar */
-@media (max-width: 639px) {
-  body {
-    padding-bottom: calc(var(--navbar-total-height) + var(--mobile-navbar-offset));
-  }
-}
+/* Mobile navbar spacing is handled by #app-scroll padding */
 
 @layer components {
   [data-sonner-toast] {

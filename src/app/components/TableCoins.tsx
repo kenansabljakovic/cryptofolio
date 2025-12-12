@@ -94,7 +94,7 @@ export default function TableCoins() {
         endMessage={<p className="my-4 text-center">You are all set! No more records to load.</p>}
         style={{ overflow: 'hidden' }}
         className="w-full"
-        scrollableTarget="window"
+        scrollableTarget="app-scroll"
       >
         <Table>
           <TableHeader>
