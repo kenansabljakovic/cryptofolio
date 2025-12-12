@@ -21,4 +21,3 @@ export default function ViewportHeightFix() {
 
   return null;
 }
-
