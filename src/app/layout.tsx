@@ -36,11 +36,11 @@ export default function RootLayout({
         <Providers>
           <div
             id="app-shell"
-            className="relative flex h-[100dvh] min-h-[100dvh] flex-col sm:h-screen sm:min-h-screen"
+            className="relative flex h-dvh min-h-dvh flex-col sm:h-screen sm:min-h-screen"
           >
             <div
               id="app-scroll"
-              className="flex-1 min-h-0 overflow-y-auto overscroll-contain pb-[var(--navbar-total-height)] sm:pb-0"
+              className="min-h-0 flex-1 overflow-y-auto overscroll-contain pb-[var(--navbar-total-height)] sm:pb-0"
             >
               <header>
                 <MarketDataHeader />
