@@ -42,19 +42,24 @@ export default function MobileNavbar() {
       );
     };
 
+    let lastDelta = 0;
     const computeOffset = () => {
       const vv = window.visualViewport;
       if (!vv) {
         setOffsets(0);
+        lastDelta = 0;
         return;
       }
 
       const layoutViewportHeight = window.innerHeight || vv.height;
       // Signed delta between visual and layout viewport bottoms.
-      // Positive => visual bottom lower (toolbar hidden) => translate DOWN.
-      // Negative => visual bottom higher (toolbar shown) => translate UP.
-      const delta = Math.round(vv.height + vv.offsetTop - layoutViewportHeight);
+      // We only need to move UP when Safari UI is visible; moving DOWN
+      // (small positive deltas) tends to cause jitter on iOS.
+      const rawDelta = vv.height + vv.offsetTop - layoutViewportHeight;
+      const delta = Math.min(0, Math.round(rawDelta));
 
+      if (delta === lastDelta) return;
+      lastDelta = delta;
       setOffsets(delta);
     };
 
@@ -68,7 +73,6 @@ export default function MobileNavbar() {
 
     computeOffset();
     window.visualViewport?.addEventListener('resize', onViewportChange);
-    window.visualViewport?.addEventListener('scroll', onViewportChange);
     window.addEventListener('orientationchange', computeOffset);
 
     return () => {
@@ -76,7 +80,6 @@ export default function MobileNavbar() {
         cancelAnimationFrame(rafId);
       }
       window.visualViewport?.removeEventListener('resize', onViewportChange);
-      window.visualViewport?.removeEventListener('scroll', onViewportChange);
       window.removeEventListener('orientationchange', computeOffset);
       setOffsets(0);
     };

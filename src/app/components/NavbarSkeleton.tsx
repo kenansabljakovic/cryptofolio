@@ -26,6 +26,7 @@ export default function NavbarSkeleton() {
       </nav>
 
       <div
+        data-mobile-navbar
         className="fixed inset-x-0 bottom-0 z-[9999] grid w-full grid-cols-3 border-t border-gray-200 bg-white/95 px-4 pt-3 backdrop-blur-xl dark:border-gray-800/50 dark:bg-[#13121A]/95 sm:hidden"
         style={{
           paddingBottom:

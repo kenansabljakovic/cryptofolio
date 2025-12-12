@@ -42,6 +42,9 @@ body {
     backface-visibility: hidden;
     -webkit-perspective: 1000;
     perspective: 1000;
+    /* iOS Safari + backdrop-filter on fixed elements can jitter while scrolling */
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 }
 
