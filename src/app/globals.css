@@ -51,7 +51,7 @@ body {
 /* Mobile navbar spacing - ensures content doesn't scroll behind fixed navbar */
 @media (max-width: 639px) {
   body {
-    padding-bottom: calc(var(--navbar-total-height) + var(--mobile-navbar-padding-offset));
+    padding-bottom: var(--navbar-total-height);
   }
 }
 

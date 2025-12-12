@@ -28,63 +28,6 @@ export default function MobileNavbar() {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const setOffsets = (offset: number) => {
-      document.documentElement.style.setProperty('--mobile-navbar-offset', `${offset}px`);
-      // Only add extra padding when the navbar is translated UP (negative offset).
-      // When translated down, baseline navbar height padding is enough.
-      const paddingOffset = Math.max(0, -offset);
-      document.documentElement.style.setProperty(
-        '--mobile-navbar-padding-offset',
-        `${paddingOffset}px`
-      );
-    };
-
-    let lastDelta = 0;
-    const computeOffset = () => {
-      const vv = window.visualViewport;
-      if (!vv) {
-        setOffsets(0);
-        lastDelta = 0;
-        return;
-      }
-
-      const layoutViewportHeight = window.innerHeight || vv.height;
-      // Signed delta between visual and layout viewport bottoms.
-      // We only need to move UP when Safari UI is visible; moving DOWN
-      // (small positive deltas) tends to cause jitter on iOS.
-      const rawDelta = vv.height + vv.offsetTop - layoutViewportHeight;
-      const delta = Math.min(0, Math.round(rawDelta));
-
-      if (delta === lastDelta) return;
-      lastDelta = delta;
-      setOffsets(delta);
-    };
-
-    let rafId: number | null = null;
-    const onViewportChange = () => {
-      if (rafId !== null) {
-        cancelAnimationFrame(rafId);
-      }
-      rafId = requestAnimationFrame(computeOffset);
-    };
-
-    computeOffset();
-    window.visualViewport?.addEventListener('resize', onViewportChange);
-    window.addEventListener('orientationchange', computeOffset);
-
-    return () => {
-      if (rafId !== null) {
-        cancelAnimationFrame(rafId);
-      }
-      window.visualViewport?.removeEventListener('resize', onViewportChange);
-      window.removeEventListener('orientationchange', computeOffset);
-      setOffsets(0);
-    };
-  }, []);
-
   const navbar = (
     <nav
       data-mobile-navbar
@@ -92,9 +35,6 @@ export default function MobileNavbar() {
       style={{
         paddingBottom:
           'max(0.75rem, env(safe-area-inset-bottom, constant(safe-area-inset-bottom, 0px)))',
-        transform: 'translate3d(0, var(--mobile-navbar-offset, 0px), 0)',
-        WebkitTransform: 'translate3d(0, var(--mobile-navbar-offset, 0px), 0)',
-        willChange: 'transform',
         height:
           'calc(var(--navbar-height, 68px) + env(safe-area-inset-bottom, constant(safe-area-inset-bottom, 0px)))',
       }}
